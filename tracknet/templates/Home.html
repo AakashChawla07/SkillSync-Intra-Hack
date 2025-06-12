@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSync - Tech Community Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #40e0d0 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #40e0d0, #00ff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #000000, #40e0d0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .user-details h3 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .user-role {
+            color: #40e0d0;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tech-tag {
+            background: linear-gradient(45deg, #000000, #40e0d0);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(31, 38, 135, 0.37);
+        }
+
+        .domains-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .domain-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .domain-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #00ff00, #40e0d0);
+        }
+
+        .domain-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(64, 224, 208, 0.3);
+            border-color: #40e0d0;
+        }
+
+        .domain-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .domain-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .domain-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .peers-section {
+            margin-top: 30px;
+        }
+
+        .peers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .peer-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #40e0d0;
+        }
+
+        .peer-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .peer-goal {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .peer-progress {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .peer-progress-bar {
+            height: 100%;
+            background: linear-gradient(45deg, #00ff00, #40e0d0);
+            transition: width 0.3s ease;
+        }
+
+        .resources-section {
+            margin-top: 30px;
+        }
+
+        .resource-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #00ff00;
+        }
+
+        .resource-type {
+            background: #00ff00;
+            color: black;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .resource-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .resource-author {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .add-btn {
+            background: linear-gradient(45deg, #00ff00, #40e0d0);
+            color: black;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #40e0d0;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn-secondary {
+            background: #000000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .user-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .navigation {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SkillSync</h1>
+            <p>Connect, Learn, and Grow with a Community</p>
+        </div>
+
+        <div class="user-info">
+            <div class="user-card">
+                <div class="avatar">AK</div>
+                <div class="user-details">
+                    <h3>Arjun Kumar</h3>
+                    <div class="user-role">Senior Member</div>
+                    <div class="tech-stack">
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">Node.js</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Cybersecurity</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-btn active" onclick="showSection('home')">🏠 Home</button>
+            <button class="nav-btn" onclick="showSection('my-progress')">📊 My Progress</button>
+            <button class="nav-btn" onclick="showSection('networking')">🤝 Network</button>
+            <button class="nav-btn" onclick="showSection('resources')">📚 Resources</button>
+        </div>
+
+        <div class="main-content">
+            <div id="home-section">
+                <h2 style="margin-bottom: 25px; color: #333;">Tech Domains</h2>
+                <div class="domains-grid">
+                    <div class="domain-card" onclick="openDomain('cybersecurity')">
+                        <div class="domain-icon">🔒</div>
+                        <div class="domain-title">Cybersecurity</div>
+                        <p>Ethical hacking, penetration testing, security analysis</p>
+                        <div class="domain-stats">
+                            <span>👥 23 members</span>
+                            <span>📚 18 resources</span>
+                        </div>
+                    </div>
+
+                    <div class="domain-card" onclick="openDomain('backend')">
+                        <div class="domain-icon">⚙️</div>
+                        <div class="domain-title">Backend Development</div>
+                        <p>Server-side development, APIs, databases</p>
+                        <div class="domain-stats">
+                            <span>👥 31 members</span>
+                            <span>📚 25 resources</span>
+                        </div>
+                    </div>
+
+                    <div class="domain-card" onclick="openDomain('frontend')">
+                        <div class="domain-icon">🎨</div>
+                        <div class="domain-title">Frontend Development</div>
+                        <p>UI/UX, React, Vue, responsive design</p>
+                        <div class="domain-stats">
+                            <span>👥 28 members</span>
+                            <span>📚 22 resources</span>
+                        </div>
+                    </div>
+
+                    <div class="domain-card" onclick="openDomain('mobile')">
+                        <div class="domain-icon">📱</div>
+                        <div class="domain-title">Mobile Development</div>
+                        <p>Android, iOS, React Native, Flutter</p>
+                        <div class="domain-stats">
+                            <span>👥 19 members</span>
+                            <span>📚 15 resources</span>
+                        </div>
+                    </div>
+
+                    <div class="domain-card" onclick="openDomain('ai-ml')">
+                        <div class="domain-icon">🤖</div>
+                        <div class="domain-title">AI & Machine Learning</div>
+                        <p>Deep learning, data science, neural networks</p>
+                        <div class="domain-stats">
+                            <span>👥 26 members</span>
+                            <span>📚 20 resources</span>
+                        </div>
+                    </div>
+
+                    <div class="domain-card" onclick="openDomain('devops')">
+                        <div class="domain-icon">🔧</div>
+                        <div class="domain-title">DevOps & Cloud</div>
+                        <p>AWS, Docker, Kubernetes, CI/CD</p>
+                        <div class="domain-stats">
+                            <span>👥 17 members</span>
+                            <span>📚 16 resources</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="domain-section" class="hidden">
+                <button onclick="showSection('home')" style="background: none; border: none; color: #40e0d0; cursor: pointer; margin-bottom: 20px;">← Back to Domains</button>
+                <h2 id="domain-title" style="margin-bottom: 25px; color: #333;"></h2>
+                
+                <div id="senior-controls" class="hidden">
+                    <button class="add-btn" onclick="openModal('add-resource')">+ Add Resource</button>
+                    <button class="add-btn" onclick="openModal('add-opportunity')" style="background: linear-gradient(45deg, #000000, #40e0d0); color: white;">+ Add Opportunity</button>
+                </div>
+
+                <div class="peers-section">
+                    <h3 style="margin-bottom: 20px;">Community Members</h3>
+                    <div class="peers-grid" id="peers-container">
+                        <!-- Peers will be populated here -->
+                    </div>
+                </div>
+
+                <div class="resources-section">
+                    <h3 style="margin-bottom: 20px;">Resources & Opportunities</h3>
+                    <div id="resources-container">
+                        <!-- Resources will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="my-progress-section" class="hidden">
+                <h2 style="margin-bottom: 25px; color: #333;">My Learning Progress</h2>
+                <button class="add-btn" onclick="openModal('add-goal')">+ Add New Goal</button>
+                
+                <div id="goals-container">
+                    <div class="resource-item">
+                        <div class="resource-type" style="background: #40e0d0; color: black;">Current Goal</div>
+                        <div class="resource-title">Master React Hooks & Context API</div>
+                        <div class="resource-author">Started: March 2025 | Target: June 2025</div>
+                        <div style="margin-top: 15px;">
+                            <div style="margin-bottom: 5px;">Progress: 65%</div>
+                            <div class="peer-progress">
+                                <div class="peer-progress-bar" style="width: 65%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="resource-item">
+                        <div class="resource-type" style="background: #00ff00; color: black;">Completed</div>
+                        <div class="resource-title">JavaScript ES6+ Fundamentals</div>
+                        <div class="resource-author">Completed: February 2025</div>
+                        <div style="margin-top: 15px;">
+                            <div style="margin-bottom: 5px;">Progress: 100%</div>
+                            <div class="peer-progress">
+                                <div class="peer-progress-bar" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="networking-section" class="hidden">
+                <h2 style="margin-bottom: 25px; color: #333;">Connect with Peers</h2>
+                <p style="margin-bottom: 25px; color: #666;">Find and connect with members who share similar interests and goals.</p>
+                
+                <div class="peers-grid">
+                    <div class="peer-card">
+                        <div class="peer-name">Priya Sharma</div>
+                        <div class="peer-goal">Learning React & Node.js for full-stack development</div>
+                        <div style="margin-bottom: 5px;">Frontend Progress: 80%</div>
+                        <div class="peer-progress">
+                            <div class="peer-progress-bar" style="width: 80%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="peer-card">
+                        <div class="peer-name">Rohit Verma</div>
+                        <div class="peer-goal">Cybersecurity certification prep (CEH)</div>
+                        <div style="margin-bottom: 5px;">Security Skills: 65%</div>
+                        <div class="peer-progress">
+                            <div class="peer-progress-bar" style="width: 65%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="peer-card">
+                        <div class="peer-name">Anita Gupta</div>
+                        <div class="peer-goal">Machine Learning engineer role preparation</div>
+                        <div style="margin-bottom: 5px;">ML/AI Progress: 70%</div>
+                        <div class="peer-progress">
+                            <div class="peer-progress-bar" style="width: 70%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="resources-section" class="hidden">
+                <h2 style="margin-bottom: 25px; color: #333;">All Resources</h2>
+                <div id="all-resources-container">
+                    <div class="resource-item">
+                        <div class="resource-type">Tutorial</div>
+                        <div class="resource-title">Complete React Development Course</div>
+                        <div class="resource-author">By: Prof. Rajesh Kumar (Senior)</div>
+                    </div>
+
+                    <div class="resource-item">
+                        <div class="resource-type" style="background: #000000; color: #40e0d0;">Opportunity</div>
+                        <div class="resource-title">Frontend Developer Internship at TechCorp</div>
+                        <div class="resource-author">Posted by: Dr. Meera Singh (Senior)</div>
+                    </div>
+
+                    <div class="resource-item">
+                        <div class="resource-type" style="background: #40e0d0; color: black;">Lecture</div>
+                        <div class="resource-title">Cybersecurity Best Practices Workshop</div>
+                        <div class="resource-author">By: Mr. Ashish Tiwari (Senior)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="add-resource-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 20px;">Add New Resource</h3>
+            <div class="form-group">
+                <label>Resource Type</label>
+                <select>
+                    <option>Tutorial</option>
+                    <option>Lecture</option>
+                    <option>Documentation</option>
+                    <option>Course</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" placeholder="Enter resource title">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea placeholder="Enter resource description" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Resource Link</label>
+                <input type="url" placeholder="https://...">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="closeModal('add-resource')">Cancel</button>
+                <button class="add-btn" onclick="addResource()">Add Resource</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-opportunity-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 20px;">Add New Opportunity</h3>
+            <div class="form-group">
+                <label>Opportunity Type</label>
+                <select>
+                    <option>Internship</option>
+                    <option>Job</option>
+                    <option>Project</option>
+                    <option>Competition</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" placeholder="Enter opportunity title">
+            </div>
+            <div class="form-group">
+                <label>Company/Organization</label>
+                <input type="text" placeholder="Enter company name">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea placeholder="Enter opportunity description" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Application Link</label>
+                <input type="url" placeholder="https://...">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="closeModal('add-opportunity')">Cancel</button>
+                <button class="add-btn" onclick="addOpportunity()">Add Opportunity</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-goal-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 20px;">Add New Learning Goal</h3>
+            <div class="form-group">
+                <label>Goal Title</label>
+                <input type="text" placeholder="Enter your learning goal">
+            </div>
+            <div class="form-group">
+                <label>Domain</label>
+                <select>
+                    <option>Frontend Development</option>
+                    <option>Backend Development</option>
+                    <option>Cybersecurity</option>
+                    <option>Mobile Development</option>
+                    <option>AI & Machine Learning</option>
+                    <option>DevOps & Cloud</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Target Completion Date</label>
+                <input type="date">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea placeholder="Describe your learning plan and milestones" rows="3"></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="closeModal('add-goal')">Cancel</button>
+                <button class="add-btn" onclick="addGoal()">Add Goal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        const domainData = {
+            cybersecurity: {
+                title: '🔒 Cybersecurity',
+                peers: [
+                    { name: 'Rohit Verma', goal: 'CEH Certification Prep', progress: 65 },
+                    { name: 'Kavya Reddy', goal: 'Penetration Testing Skills', progress: 45 },
+                    { name: 'Amit Singh', goal: 'Network Security Analysis', progress: 80 }
+                ],
+                resources: [
+                    { type: 'Tutorial', title: 'Ethical Hacking Fundamentals', author: 'Mr. Ashish Tiwari (Senior)' },
+                    { type: 'Opportunity', title: 'Cybersecurity Analyst Internship', author: 'Dr. Priya Nair (Senior)', isOpportunity: true },
+                    { type: 'Lecture', title: 'Network Security Workshop', author: 'Prof. Rajesh Kumar (Senior)' }
+                ]
+            },
+            backend: {
+                title: '⚙️ Backend Development',
+                peers: [
+                    { name: 'Priya Sharma', goal: 'Node.js & Express Mastery', progress: 75 },
+                    { name: 'Vikash Kumar', goal: 'Database Design & Optimization', progress: 60 },
+                    { name: 'Neha Agarwal', goal: 'REST API Development', progress: 85 }
+                ],
+                resources: [
+                    { type: 'Course', title: 'Complete Node.js Developer Course', author: 'Prof. Sanjay Gupta (Senior)' },
+                    { type: 'Opportunity', title: 'Backend Developer Role at StartupXYZ', author: 'Dr. Meera Singh (Senior)', isOpportunity: true },
+                    { type: 'Tutorial', title: 'MongoDB Advanced Queries', author: 'Mr. Ravi Sharma (Senior)' }
+                ]
+            },
+            frontend: {
+                title: '🎨 Frontend Development',
+                peers: [
+                    { name: 'Arjun Kumar', goal: 'React Hooks & Context', progress: 65 },
+                    { name: 'Sneha Patel', goal: 'Vue.js Component Design', progress: 50 },
+                    { name: 'Karan Joshi', goal: 'Responsive Web Design', progress: 90 }
+                ],
+                resources: [
+                    { type: 'Tutorial', title: 'Complete React Development', author: 'Prof. Rajesh Kumar (Senior)' },
+                    { type: 'Opportunity', title: 'Frontend Intern at TechCorp', author: 'Dr. Meera Singh (Senior)', isOpportunity: true },
+                    { type: 'Lecture', title: 'Modern CSS Techniques', author: 'Ms. Pooja Yadav (Senior)' }
+                ]
+            },
+            mobile: {
+                title: '📱 Mobile Development',
+                peers: [
+                    { name: 'Rahul Bansal', goal: 'Flutter App Development', progress: 70 },
+                    { name: 'Isha Kumari', goal: 'React Native Mastery', progress: 55 },
+                    { name: 'Dev Patel', goal: 'iOS Swift Development', progress: 40 }
+                ],
+                resources: [
+                    { type: 'Course', title: 'Flutter Complete Guide', author: 'Prof. Ankit Verma (Senior)' },
+                    { type: 'Tutorial', title: 'React Native Navigation', author: 'Dr. Sunita Sharma (Senior)' },
+                    { type: 'Opportunity', title: 'Mobile App Developer Internship', author: 'Mr. Deepak Singh (Senior)', isOpportunity: true }
+                ]
+            },
+            'ai-ml': {
+                title: '🤖 AI & Machine Learning',
+                peers: [
+                    { name: 'Anita Gupta', goal: 'ML Engineer Role Prep', progress: 70 },
+                    { name: 'Suresh Nair', goal: 'Deep Learning Specialization', progress: 55 },
+                    { name: 'Ritika Jain', goal: 'Data Science Portfolio', progress: 65 }
+                ],
+                resources: [
+                    { type: 'Course', title: 'Machine Learning A-Z', author: 'Prof. Dr. Ramesh Pandey (Senior)' },
+                    { type: 'Lecture', title: 'Neural Networks Workshop', author: 'Dr. Kavita Malhotra (Senior)' },
+                    { type: 'Opportunity', title: 'Data Scientist Role at AI Corp', author: 'Prof. Sunil Kumar (Senior)', isOpportunity: true }
+                ]
+            },
+            devops: {
+                title: '🔧 DevOps & Cloud',
+                peers: [
+                    { name: 'Gaurav Mishra', goal: 'AWS Solutions Architect', progress: 60 },
+                    { name: 'Pooja Singh', goal: 'Docker & Kubernetes', progress: 45 },
+                    { name: 'Harsh Agarwal', goal: 'CI/CD Pipeline Mastery', progress: 75 }
+                ],
+                resources: [
+                    { type: 'Tutorial', title: 
+

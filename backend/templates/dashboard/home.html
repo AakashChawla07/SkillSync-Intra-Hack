@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - SkillSync{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4">
+            <i class="fas fa-tachometer-alt me-2"></i>Welcome back, {{ user.get_full_name|default:user.username }}!
+        </h2>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ user_domains.count }}</h4>
+                        <p class="mb-0">Tech Domains</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-code fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ total_goals }}</h4>
+                        <p class="mb-0">Total Goals</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-bullseye fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ buddies_count }}</h4>
+                        <p class="mb-0">Tech Buddies</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ completion_rate|floatformat:0 }}%</h4>
+                        <p class="mb-0">Completion Rate</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-chart-pie fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Active Goals -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5><i class="fas fa-bullseye me-2"></i>Active Goals</h5>
+                <a href="{% url 'create_goal' %}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus me-1"></i>New Goal
+                </a>
+            </div>
+            <div class="card-body">
+                {% if active_goals %}
+                    {% for goal in active_goals %}
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">
+                                <a href="{% url 'goal_detail' goal.id %}" class="text-decoration-none">
+                                    {{ goal.title }}
+                                </a>
+                            </h6>
+                            <small class="text-muted">{{ goal.domain.name }}</small>
+                            <div class="progress mt-2" style="height: 5px;">
+                                <div class="progress-bar" role="progressbar" style="width: {{ goal.progress_percentage }}%"></div>
+                            </div>
+                        </div>
+                        <span class="badge bg-{{ goal.priority }}">{{ goal.get_priority_display }}</span>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No active goals. Create your first goal to get started!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Resources -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5><i class="fas fa-book me-2"></i>Recent Resources</h5>
+                <a href="{% url 'resource_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body">
+                {% if recent_resources %}
+                    {% for resource in recent_resources %}
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="me-2">
+                            <i class="fas fa-{% if resource.resource_type == 'video' %}video{% elif resource.resource_type == 'document' %}file-alt{% elif resource.resource_type == 'link' %}link{% else %}book{% endif %} text-muted"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">
+                                <a href="{% url 'resource_detail' resource.id %}" class="text-decoration-none">
+                                    {{ resource.title }}
+                                </a>
+                            </h6>
+                            <small class="text-muted">{{ resource.domain.name }} • {{ resource.created_at|date:"M d" }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No recent resources in your domains.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Weekly Progress & Recognitions -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-calendar-week me-2"></i>This Week's Progress</h5>
+            </div>
+            <div class="card-body">
+                {% if weekly_report %}
+                    <div class="mb-3">
+                        <strong>Goals Completed:</strong> {{ weekly_report.goals_completed }}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Resources Consumed:</strong> {{ weekly_report.resources_consumed }}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Hours Studied:</strong> {{ weekly_report.hours_studied }}
+                    </div>
+                    {% if weekly_report.reflection %}
+                    <div>
+                        <strong>Reflection:</strong>
+                        <p class="mt-2">{{ weekly_report.reflection|linebreaks }}</p>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <p class="text-muted">No progress report for this week yet.</p>
+                    <a href="{% url 'progress_dashboard' %}" class="btn btn-sm btn-primary">Track Progress</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-trophy me-2"></i>Current Recognitions</h5>
+            </div>
+            <div class="card-body">
+                {% if current_recognitions %}
+                    {% for recognition in current_recognitions %}
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-award text-warning me-2"></i>
+                        <div>
+                            <strong>{{ recognition.domain.name }}</strong>
+                            <small class="text-muted d-block">{{ recognition.recognition_type|title }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No current recognitions. Keep learning to earn some!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activities -->
+{% if recent_activities %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-history me-2"></i>Recent Activities</h5>
+            </div>
+            <div class="card-body">
+                {% for activity in recent_activities %}
+                <div class="d-flex align-items-start mb-3">
+                    <div class="me-3">
+                        <i class="fas {{ activity.activity_icon|default:'fa-circle' }} text-primary"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <p class="mb-1">{{ activity.description }}</p>
+                        <small class="text-muted">{{ activity.created_at|timesince }} ago</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ goal.title }} - SkillSync{% endblock %}
+
+{% block content %}
+
+<!-- Goal Header -->
+<div class="row">
+    <div class="col-12">
+        <h2>{{ goal.title }}</h2>
+        <p class="text-muted">{{ goal.domain.name }} • Created {{ goal.created_at|date:"M d, Y" }}</p>
+        <a href="{% url 'progress_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+        <hr>
+    </div>
+</div>
+
+<!-- Goal Details -->
+<div class="row">
+    <div class="col-md-8">
+        
+        <!-- Basic Goal Info -->
+        <div class="card">
+            <div class="card-body">
+                <h5>Goal Information</h5>
+                
+                <p><strong>Description:</strong></p>
+                <p>{{ goal.description|default:"No description provided" }}</p>
+                
+                <p><strong>Priority:</strong> 
+                    <span class="badge bg-secondary">{{ goal.get_priority_display }}</span>
+                </p>
+                
+                <p><strong>Status:</strong> 
+                    <span class="badge bg-primary">{{ goal.get_status_display }}</span>
+                </p>
+                
+                <p><strong>Target Date:</strong> {{ goal.target_date|date:"M d, Y" }}</p>
+                
+                {% if goal.completed_at %}
+                <p><strong>Completed:</strong> {{ goal.completed_at|date:"M d, Y" }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Progress Section -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5>Progress: {{ goal.progress_percentage }}%</h5>
+                
+                <!-- Progress Bar -->
+                <div class="progress mb-3" style="height: 20px;">
+                    <div class="progress-bar bg-primary" style="width: {{ goal.progress_percentage }}%"></div>
+                </div>
+                
+                <!-- Update Progress Form -->
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update_progress">
+                    
+                    <label for="progress">Update Progress:</label>
+                    <input type="range" id="progress" name="progress" 
+                           min="0" max="100" value="{{ goal.progress_percentage }}" 
+                           class="form-range">
+                    <p>Current: <span id="progressValue">{{ goal.progress_percentage }}</span>%</p>
+                    
+                    <button type="submit" class="btn btn-primary">Update Progress</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Tasks List -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5>Tasks</h5>
+                
+                {% if tasks %}
+                    {% for task in tasks %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <!-- Task Toggle Form -->
+                            <form method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="toggle_task">
+                                <input type="hidden" name="task_id" value="{{ task.id }}">
+                                
+                                {% if task.is_completed %}
+                                    <button type="submit" class="btn btn-success btn-sm">✓ Done</button>
+                                {% else %}
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm">☐ Not Done</button>
+                                {% endif %}
+                            </form>
+                            
+                            <!-- Task Info -->
+                            <strong>{{ task.title }}</strong>
+                            <br>
+                            <small class="text-muted">Created: {{ task.created_at|date:"M d, Y" }}</small>
+                            
+                            {% if task.completed_at %}
+                            <br><small class="text-success">Completed: {{ task.completed_at|date:"M d, Y" }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-center">No tasks added yet.</p>
+                    <p class="text-center text-muted">Add some tasks to track your progress better!</p>
+                {% endif %}
+            </div>
+        </div>
+        
+    </div>
+    
+    <!-- Sidebar with Simple Stats -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h6>Quick Stats</h6>
+                
+                <p><strong>Total Tasks:</strong> {{ total_tasks }}</p>
+                <p><strong>Completed Tasks:</strong> {{ completed_tasks }}</p>
+                <p><strong>Remaining Tasks:</strong> {{ remaining_tasks }}</p>
+                
+                {% if days_left %}
+                <hr>
+                <p><strong>Days Left:</strong> {{ days_left }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Simple JavaScript for Progress Slider -->
+<script>
+    document.getElementById('progress').addEventListener('input', function() {
+        document.getElementById('progressValue').textContent = this.value;
+    });
+</script>
+
+{% endblock %}

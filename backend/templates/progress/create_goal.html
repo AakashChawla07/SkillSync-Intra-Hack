@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Goal - SkillSync{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-bullseye me-2"></i>Create New Goal</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" id="goalForm">
+                    {% csrf_token %}
+
+                    <!-- Goal Title -->
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Goal Title *</label>
+                        <input type="text" class="form-control" id="title" name="title" required
+                            placeholder="e.g., Learn React.js fundamentals">
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"
+                            placeholder="Describe what you want to achieve..."></textarea>
+                    </div>
+                        <div class="mb-3">
+                        <input list="domain-list" name="domain_name" id="domain" class="form-control" required>
+                        
+                        <datalist id="domain-list">
+                            {% for ud in user_domains %}
+                            <option value="{{ ud.domain.name }}">
+                                {% endfor %}
+                            </datalist>
+                        </div> 
+
+                    <!-- Priority and Target Date -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="priority" class="form-label">Priority *</label>
+                                <select class="form-select" id="priority" name="priority" required>
+                                    <option value="">Select priority</option>
+                                    {% for value, label in priority_choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="target_date" class="form-label">Target Date *</label>
+                                <input type="date" class="form-control" id="target_date" name="target_date" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tasks Section -->
+                    <div class="mb-4">
+                        <label class="form-label">Tasks (Optional)</label>
+                        <div id="tasksContainer">
+                            <div class="input-group mb-2">
+                                <input type="text" class="form-control" name="tasks[]" placeholder="Enter a task...">
+                                <button type="button" class="btn btn-outline-secondary" onclick="removeTask(this)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="addTask()">
+                            <i class="fas fa-plus me-1"></i>Add Task
+                        </button>
+                        <div class="form-text">Break down your goal into smaller, manageable tasks</div>
+                    </div>
+
+                    <!-- Submit Buttons -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'progress_dashboard' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>Create Goal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function addTask() {
+        const container = document.getElementById('tasksContainer');
+        const taskDiv = document.createElement('div');
+        taskDiv.className = 'input-group mb-2';
+        taskDiv.innerHTML = `
+        <input type="text" class="form-control" name="tasks[]" placeholder="Enter a task...">
+        <button type="button" class="btn btn-outline-secondary" onclick="removeTask(this)">
+            <i class="fas fa-minus"></i>
+        </button>
+    `;
+        container.appendChild(taskDiv);
+    }
+
+    function removeTask(button) {
+        const container = document.getElementById('tasksContainer');
+        if (container.children.length > 1) {
+            button.parentElement.remove();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('target_date').setAttribute('min', today);
+    });
+</script>
+{% endblock %}

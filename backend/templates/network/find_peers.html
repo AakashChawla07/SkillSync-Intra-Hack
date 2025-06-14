@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Find Peers - SkillSync{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-search me-2"></i>Find Peers</h2>
+            <a href="{% url 'network_dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to Network
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Domain Filter -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h6>Filter by Domain:</h6>
+                <div class="btn-group flex-wrap" role="group">
+                    <a href="{% url 'find_peers' %}" class="btn btn-outline-primary {% if not selected_domain %}active{% endif %}">
+                        All Domains
+                    </a>
+                    {% for domain in domains %}
+                    <a href="{% url 'find_peers' %}?domain={{ domain.id }}" 
+                       class="btn btn-outline-primary {% if selected_domain == domain.id|stringformat:'s' %}active{% endif %}">
+                        {{ domain.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Peers List -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-users me-2"></i>Available Peers ({{ peers.count }})</h5>
+            </div>
+            <div class="card-body">
+                {% if peers %}
+                <div class="row">
+                    {% for peer in peers %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                {% if peer.profile_picture %}
+                                <img src="{{ peer.profile_picture.url }}" class="rounded-circle mb-3" width="80" height="80" alt="Profile">
+                                {% else %}
+                                <div class="bg-secondary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                    <i class="fas fa-user text-white fa-2x"></i>
+                                </div>
+                                {% endif %}
+                                
+                                <h6 class="card-title">{{ peer.get_full_name|default:peer.username }}</h6>
+                                <p class="text-muted small">{{ peer.college_name|default:"College not specified" }}</p>
+                                
+                                <!-- User Domains -->
+                                <div class="mb-3">
+                                    {% for user_domain in peer.userdomain_set.all %}
+                                        {% if user_domain.is_active %}
+                                        <span class="badge bg-primary me-1 mb-1">{{ user_domain.domain.name }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                
+                                <div class="mt-auto">
+                                    <a href="{% url 'send_buddy_request' peer.id %}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-user-plus me-1"></i>Connect
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h5>No Peers Found</h5>
+                    <p class="text-muted">
+                        {% if selected_domain %}
+                            No peers found in this domain. Try selecting a different domain or view all domains.
+                        {% else %}
+                            No peers found with similar interests. Make sure you have added your domains in your profile.
+                        {% endif %}
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

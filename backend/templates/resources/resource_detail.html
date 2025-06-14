@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ resource.title }} - SkillSync{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h2>{{ resource.title }}</h2>
+                        <div class="mb-2">
+                            <span class="badge bg-primary">{{ resource.domain.name }}</span>
+                            <span class="badge bg-secondary">{{ resource.get_resource_type_display }}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-primary" onclick="toggleBookmark()">
+                            <i class="fas fa-bookmark{% if not is_bookmarked %}-o{% endif %}" id="bookmark-icon"></i>
+                            <span id="bookmark-text">{% if is_bookmarked %}Bookmarked{% else %}Bookmark{% endif %}</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <p>{{ resource.description|linebreaks }}</p>
+                </div>
+                
+                {% if resource.url %}
+                <div class="mb-4">
+                    <a href="{{ resource.url }}" target="_blank" class="btn btn-success">
+                        <i class="fas fa-external-link-alt me-1"></i>Access Resource
+                    </a>
+                </div>
+                {% endif %}
+                
+                {% if resource.file %}
+                <div class="mb-4">
+                    <a href="{{ resource.file.url }}" target="_blank" class="btn btn-info">
+                        <i class="fas fa-download me-1"></i>Download File
+                    </a>
+                </div>
+                {% endif %}
+                
+                {% if resource.tags %}
+                <div class="mb-4">
+                    <h6>Tags:</h6>
+                    {% for tag in tags %}
+                    <span class="badge bg-light text-dark me-1">#{{ tag.strip }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="fas fa-info-circle me-2"></i>Resource Info</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>Uploaded by:</strong>
+                    <div>{{ resource.uploaded_by.get_full_name|default:resource.uploaded_by.username }}</div>
+                </div>
+                <div class="mb-3">
+                    <strong>Domain:</strong>
+                    <div>{{ resource.domain.name }}</div>
+                </div>
+                <div class="mb-3">
+                    <strong>Type:</strong>
+                    <div>{{ resource.get_resource_type_display }}</div>
+                </div>
+                <div class="mb-3">
+                    <strong>Uploaded:</strong>
+                    <div>{{ resource.created_at|date:"M d, Y" }}</div>
+                </div>
+                {% if avg_rating %}
+                <div>
+                    <strong>Average Rating:</strong>
+                    <div>{{ avg_rating|floatformat:1 }}/5</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleBookmark() {
+    const icon = document.getElementById('bookmark-icon');
+    const text = document.getElementById('bookmark-text');
+    
+    if (icon.classList.contains('fa-bookmark-o')) {
+        icon.classList.remove('fa-bookmark-o');
+        icon.classList.add('fa-bookmark');
+        text.textContent = 'Bookmarked';
+    } else {
+        icon.classList.remove('fa-bookmark');
+        icon.classList.add('fa-bookmark-o');
+        text.textContent = 'Bookmark';
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Tech Domains - SkillSync{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4">
+            <i class="fas fa-code me-2"></i>Tech Domains
+        </h2>
+    </div>
+</div>
+
+<div class="row">
+    {% for domain in domains %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            {% if domain.image %}
+            <img src="{{ domain.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ domain.name }}">
+            {% else %}
+            <div class="card-img-top bg-primary d-flex align-items-center justify-content-center" style="height: 200px;">
+                <i class="fas fa-code fa-4x text-white"></i>
+            </div>
+            {% endif %}
+            
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ domain.name }}</h5>
+                <p class="card-text flex-grow-1">{{ domain.description|truncatewords:20 }}</p>
+                
+                <div class="mb-3">
+                    <small class="text-muted">
+                        <i class="fas fa-users me-1"></i>{{ domain.member_count }} members
+                    </small>
+                </div>
+                
+                <div class="mt-auto">
+                    {% if domain.id in user_domains %}
+                        <a href="{% url 'domain_detail' domain.id %}" class="btn btn-success">
+                            <i class="fas fa-check me-1"></i>Joined
+                        </a>
+                    {% else %}
+                        <a href="{% url 'join_domain' domain.id %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i>Join Domain
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'domain_detail' domain.id %}" class="btn btn-outline-primary">
+                        <i class="fas fa-eye me-1"></i>View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>No domains available at the moment.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

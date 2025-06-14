@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+
+{% block title %}Progress Dashboard - SkillSync{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-chart-line me-2"></i>Progress Dashboard</h2>
+            <a href="{% url 'create_goal' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i>Create Goal
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h6 class="card-title mb-0">Total Goals</h6>
+                        <h2 class="mb-0">{{ total_goals }}</h2>
+                    </div>
+                    <i class="fas fa-bullseye fa-2x opacity-75"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h6 class="card-title mb-0">Completed</h6>
+                        <h2 class="mb-0">{{ completed_goals }}</h2>
+                    </div>
+                    <i class="fas fa-check-circle fa-2x opacity-75"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h6 class="card-title mb-0">In Progress</h6>
+                        <h2 class="mb-0">{{ in_progress_goals }}</h2>
+                    </div>
+                    <i class="fas fa-clock fa-2x opacity-75"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Goals List -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-list me-2"></i>Your Goals</h5>
+            </div>
+            <div class="card-body">
+                {% if goals %}
+                    {% for goal in goals %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="flex-grow-1">
+                                    <h6 class="card-title mb-1">
+                                        <a href="{% url 'goal_detail' goal.id %}" class="text-decoration-none">
+                                            {{ goal.title }}
+                                        </a>
+                                    </h6>
+                                    <p class="text-muted small mb-2">{{ goal.description|truncatewords:15 }}</p>
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <span class="badge bg-info">{{ goal.domain.name }}</span>
+                                        <span class="badge bg-{% if goal.priority == 'high' %}danger{% elif goal.priority == 'medium' %}warning{% else %}secondary{% endif %}">
+                                            {{ goal.get_priority_display }}
+                                        </span>
+                                        <span class="badge bg-{% if goal.status == 'completed' %}success{% elif goal.status == 'in_progress' %}primary{% else %}secondary{% endif %}">
+                                            {{ goal.get_status_display }}
+                                        </span>
+                                    </div>
+                                    <small class="text-muted">
+                                        Target: {{ goal.target_date|date:"M d, Y" }} | 
+                                        Created: {{ goal.created_at|date:"M d, Y" }}
+                                    </small>
+                                </div>
+                                <div class="text-end">
+                                    <h5 class="mb-0 {% if goal.progress_percentage == 100 %}text-success{% elif goal.progress_percentage > 0 %}text-primary{% else %}text-muted{% endif %}">
+                                        {{ goal.progress_percentage }}%
+                                    </h5>
+                                </div>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar {% if goal.progress_percentage == 100 %}bg-success{% else %}bg-primary{% endif %}" 
+                                     style="width: {{ goal.progress_percentage }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-bullseye fa-3x text-muted mb-3"></i>
+                    <h5>No Goals Yet</h5>
+                    <p class="text-muted">Create your first goal to start tracking your progress!</p>
+                    <a href="{% url 'create_goal' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i>Create Goal
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="col-md-4">
+        <!-- Weekly Progress -->
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="fas fa-calendar-week me-2"></i>This Week</h6>
+            </div>
+            <div class="card-body">
+                {% if weekly_report %}
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <small>Goals Worked On:</small>
+                        <strong>{{ weekly_report.goals_worked_on }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <small>Tasks Completed:</small>
+                        <strong>{{ weekly_report.tasks_completed }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <small>Study Hours:</small>
+                        <strong>{{ weekly_report.hours_spent }}h</strong>
+                    </div>
+                </div>
+                
+                {% if weekly_report.achievements %}
+                <div class="mb-3">
+                    <h6 class="small">Achievements:</h6>
+                    <p class="small">{{ weekly_report.achievements }}</p>
+                </div>
+                {% endif %}
+                
+                {% if weekly_report.challenges %}
+                <div>
+                    <h6 class="small">Challenges:</h6>
+                    <p class="small">{{ weekly_report.challenges }}</p>
+                </div>
+                {% endif %}
+                {% else %}
+                <div class="text-center">
+                    <i class="fas fa-chart-bar fa-2x text-muted mb-2"></i>
+                    <p class="small text-muted">No progress recorded this week</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6><i class="fas fa-bolt me-2"></i>Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'create_goal' %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus me-1"></i>New Goal
+                    </a>
+                    <button class="btn btn-success btn-sm" onclick="updateProgress()">
+                        <i class="fas fa-chart-line me-1"></i>Log Progress
+                    </button>
+                    <button class="btn btn-info btn-sm" onclick="viewReports()">
+                        <i class="fas fa-chart-pie me-1"></i>View Reports
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateProgress() {
+    alert('Progress update feature would be implemented here');
+}
+
+function viewReports() {
+    alert('Reports feature would be implemented here');
+}
+</script>
+{% endblock %}

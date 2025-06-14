@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Network - SkillSync{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-users me-2"></i>Your Network</h2>
+            <a href="{% url 'find_peers' %}" class="btn btn-primary">
+                <i class="fas fa-search me-1"></i>Find Peers
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Tech Buddies -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-user-friends me-2"></i>Tech Buddies ({{ accepted_buddies.count }})</h5>
+            </div>
+            <div class="card-body">
+                {% if accepted_buddies %}
+                <div class="row">
+                    {% for buddy in accepted_buddies %}
+                        {% if buddy.requester == user %}
+                            {% with buddy.receiver as buddy_user %}
+                                {% include "partials/buddy_card.html" %}
+                            {% endwith %}
+                        {% else %}
+                            {% with buddy.requester as buddy_user %}
+                                {% include "partials/buddy_card.html" %}
+                            {% endwith %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-user-friends fa-3x text-muted mb-3"></i>
+                    <h5>No Tech Buddies Yet</h5>
+                    <p class="text-muted">Connect with peers who share your interests!</p>
+                    <a href="{% url 'find_peers' %}" class="btn btn-primary">
+                        <i class="fas fa-search me-1"></i>Find Peers
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+    <!-- Sidebar -->
+    <div class="col-md-4">
+        <!-- Pending Requests -->
+        {% if pending_requests %}
+        {% for request in pending_requests %}
+        <form method="post" action="{% url 'respond_request' request.id 'accept' %}" style="display: inline;">
+    {% csrf_token %}
+    <button class="btn btn-success btn-sm" type="submit">
+        <i class="fas fa-check"></i>
+    </button>
+</form>
+<form method="post" action="{% url 'respond_request' request.id 'reject' %}" style="display: inline;">
+    {% csrf_token %}
+    <button class="btn btn-danger btn-sm" type="submit">
+        <i class="fas fa-times"></i>
+    </button>
+</form>
+{% endfor %}
+        {% endif %}
+        
+        <!-- Network Stats -->
+        <div class="card {% if pending_requests %}mt-4{% endif %}">
+            <div class="card-header">
+                <h6><i class="fas fa-chart-bar me-2"></i>Network Stats</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Tech Buddies:</span>
+                    <strong>{{ accepted_buddies.count }}</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Pending Requests:</span>
+                    <strong>{{ pending_requests.count }}</strong>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Mentorships:</span>
+                    <strong>{{ mentorship_requests.count }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function respondToRequest(requestId, action) {
+    // This would typically be an AJAX call to respond to buddy request
+    if (confirm(`Are you sure you want to ${action} this request?`)) {
+        // Make AJAX call to respond to request
+        console.log(`${action} request ${requestId}`);
+        // Reload page or update UI accordingly
+        location.reload();
+    }
+}
+
+function startChat(userId) {
+    // This would open a chat interface
+    alert('Chat feature would be implemented here');
+}
+</script>
+{% endblock %}

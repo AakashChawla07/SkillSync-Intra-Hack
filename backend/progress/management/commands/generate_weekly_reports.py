@@ -1,0 +1,68 @@
+from django.core.management.base import BaseCommand
+from datetime import date, timedelta
+from accounts.models import User
+from progress.models import Goal, GoalTask, WeeklyProgressReport
+from domains.models import TechDomain, UserDomain
+import random
+
+class Command(BaseCommand):
+    help = 'Generate weekly progress reports for all users'
+
+    def handle(self, *args, **options):
+        today = date.today()
+        week_start = today - timedelta(days=today.weekday())
+        week_end = week_start + timedelta(days=6)
+        
+        motivational_messages = [
+            "Great effort this week! Your consistency is paying off.",
+            "You're making solid progress. Keep up the momentum!",
+            "Impressive dedication! Your skills are definitely growing.",
+            "Nice work! Consider sharing your progress with the community.",
+            "Consistent progress detected—you're on the right track!",
+        ]
+        
+        suggestions = [
+            "Try building a mini project to apply your knowledge.",
+            "Consider teaming up with a peer for your next challenge.",
+            "Set a slightly more challenging goal for next week.",
+            "Connect with a mentor in your domain for guidance.",
+        ]
+        
+        for user in User.objects.filter(is_profile_complete=True):
+            
+            if WeeklyProgressReport.objects.filter(
+                user=user, 
+                week_start=week_start
+            ).exists():
+                continue
+            
+            goals_completed = Goal.objects.filter(
+                user=user,
+                completed_at__date__range=[week_start, week_end]
+            ).count()
+            
+            tasks_completed = GoalTask.objects.filter(
+                goal__user=user,
+                completed_at__date__range=[week_start, week_end]
+            ).count()
+            
+            active_domains = TechDomain.objects.filter(
+                userdomain__user=user,
+                userdomain__is_active=True
+            )
+            
+            report = WeeklyProgressReport.objects.create(
+                user=user,
+                week_start=week_start,
+                week_end=week_end,
+                goals_completed=goals_completed,
+                tasks_completed=tasks_completed,
+                motivational_message=random.choice(motivational_messages),
+                suggestions=random.choice(suggestions)
+            )
+            
+            report.domains_active.set(active_domains)
+            
+            self.stdout.write(
+                self.style.SUCCESS(f'Generated report for {user.username}')
+            )

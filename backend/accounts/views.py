@@ -10,18 +10,10 @@ from progress.models import Goal, WeeklyProgressReport
 from resources.models import Resource
 from network.models import TechBuddy
 from .forms import UserRegistrationForm, ProfileSetupForm
+from django.urls import reverse_lazy
 from .models import User
 
 # Create your views here.
-
-from django.shortcuts import render, redirect
-from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import LoginView
-from django.contrib import messages
-from django.urls import reverse_lazy
-from .forms import UserRegistrationForm, ProfileSetupForm
-
 def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)

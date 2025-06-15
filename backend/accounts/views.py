@@ -88,14 +88,14 @@ def dashboard_home(request):
     active_goals = Goal.objects.filter(
         user=user,
         status__in=['not_started', 'in_progress']
-    ).select_related('domain').order_by('-created_at')[:5]
+    ).select_related('domain').order_by('-created_at')[:3]
     
     
     domain_ids = user_domains.values_list('domain_id', flat=True)
     recent_resources = Resource.objects.filter(
         domain_id__in=domain_ids,
         is_approved=True
-    ).select_related('domain', 'uploaded_by').order_by('-created_at')[:5]
+    ).select_related('domain', 'uploaded_by').order_by('-created_at')[:3]
     
     
     today = date.today()

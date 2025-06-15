@@ -53,17 +53,21 @@
 
     
 <!-- Sidebar -->
-<div class="col-md-4">
+<div class="col-md-3">
     <!-- Pending Requests -->
     {% if pending_requests %}
         {% for request in pending_requests %}
         <div class="d-flex align-items-center justify-content-between border rounded p-2 mb-2">
             <div class="d-flex align-items-center">
-                <img src="{{ request.sender.profile_picture }}" 
-                     alt="Profile Picture" 
-                     class="rounded-circle mr-2" 
-                     width="40" height="40">
-                <strong class="ml-2">{{ request.sender.first_name }} {{request.sender.first_name}}</strong>
+                {% if request.requester.profile_picture %}
+                    <img src="{{ request.requester.profile_picture.url }}" class="rounded-circle mb-3" width="40" height="40" alt="Profile">
+                {% else %}
+                    <div class="bg-secondary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="fas fa-user text-white fa-2x"></i>
+                    </div>
+                {% endif %}
+                                
+                <h6 class="card-title mx-2">{{ request.requester.get_full_name|default:request.requester.username }}</h6>
             </div>
             <div>
                 <form method="post" action="{% url 'respond_request' request.id 'accept' %}" style="display: inline;">
@@ -110,17 +114,13 @@
 
 <script>
 function respondToRequest(requestId, action) {
-    // This would typically be an AJAX call to respond to buddy request
     if (confirm(`Are you sure you want to ${action} this request?`)) {
-        // Make AJAX call to respond to request
         console.log(`${action} request ${requestId}`);
-        // Reload page or update UI accordingly
         location.reload();
     }
 }
 
 function startChat(userId) {
-    // This would open a chat interface
     alert('Chat feature would be implemented here');
 }
 </script>

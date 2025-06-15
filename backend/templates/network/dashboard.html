@@ -52,25 +52,38 @@
 </div>
 
     
-    <!-- Sidebar -->
-    <div class="col-md-4">
-        <!-- Pending Requests -->
-        {% if pending_requests %}
+<!-- Sidebar -->
+<div class="col-md-4">
+    <!-- Pending Requests -->
+    {% if pending_requests %}
         {% for request in pending_requests %}
-        <form method="post" action="{% url 'respond_request' request.id 'accept' %}" style="display: inline;">
-    {% csrf_token %}
-    <button class="btn btn-success btn-sm" type="submit">
-        <i class="fas fa-check"></i>
-    </button>
-</form>
-<form method="post" action="{% url 'respond_request' request.id 'reject' %}" style="display: inline;">
-    {% csrf_token %}
-    <button class="btn btn-danger btn-sm" type="submit">
-        <i class="fas fa-times"></i>
-    </button>
-</form>
-{% endfor %}
-        {% endif %}
+        <div class="d-flex align-items-center justify-content-between border rounded p-2 mb-2">
+            <div class="d-flex align-items-center">
+                <img src="{{ request.sender.profile_picture }}" 
+                     alt="Profile Picture" 
+                     class="rounded-circle mr-2" 
+                     width="40" height="40">
+                <strong class="ml-2">{{ request.sender.first_name }} {{request.sender.first_name}}</strong>
+            </div>
+            <div>
+                <form method="post" action="{% url 'respond_request' request.id 'accept' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button class="btn btn-success btn-sm" type="submit">
+                        <i class="fas fa-check"></i>
+                    </button>
+                </form>
+                <form method="post" action="{% url 'respond_request' request.id 'reject' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button class="btn btn-danger btn-sm" type="submit">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
         
         <!-- Network Stats -->
         <div class="card {% if pending_requests %}mt-4{% endif %}">

@@ -4,25 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}SkillSync - Learn, Connect, Grow{% endblock %}</title>
+    
+    <!-- Bootstrap & FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+        .navbar-nav .nav-link {
+            font-weight: 500;
+        }
+        .dropdown-menu a {
+            font-weight: 500;
+        }
+        .alert {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        main.container-fluid {
+            max-width: 1140px;
+        }
+    </style>
+
     {% block extra_css %}{% endblock %}
 </head>
 <body>
+
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'dashboard' %}">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'dashboard' %}">
                 <i class="fas fa-graduation-cap me-2"></i>SkillSync
             </a>
-            
+
             {% if user.is_authenticated %}
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
+
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
+                <!-- Left navigation -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'dashboard' %}">
                             <i class="fas fa-tachometer-alt me-1"></i>Dashboard
@@ -49,16 +76,19 @@
                         </a>
                     </li>
                 </ul>
-                
-                <ul class="navbar-nav">
+
+                <!-- Right dropdown -->
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-user me-1"></i>{{ user.get_full_name|default:user.username }}
                         </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'profile' %}">
-                                <i class="fas fa-user-circle me-2"></i>Profile
-                            </a></li>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="{% url 'profile' %}">
+                                    <i class="fas fa-user-circle me-2"></i>Profile
+                                </a>
+                            </li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                         </ul>
@@ -69,13 +99,13 @@
         </div>
     </nav>
 
-    <!-- Messages -->
+    <!-- Flash Messages -->
     {% if messages %}
-    <div class="container mt-3">
+    <div class="container mt-4">
         {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
             {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endfor %}
     </div>
@@ -86,6 +116,7 @@
         {% block content %}{% endblock %}
     </main>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_js %}{% endblock %}
 </body>

@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 class User(AbstractUser):
@@ -17,8 +17,14 @@ class User(AbstractUser):
         ('mentor', 'Mentor'),
         ('admin', 'Admin'),
     ]
+    def validate_thapar_email(value):
+        if not value.lower().endswith('@thapar.edu'):
+            raise ValidationError("Email must be a College email (ending with @thapar.edu).")
+        else:
+            return value
     
-    college_email = models.EmailField(unique=True)
+    
+    college_email = models.EmailField(validators=[validate_thapar_email],unique=True)
     phone_number = models.CharField(max_length=15, blank=True)
     year_of_study = models.CharField(max_length=10, choices=YEAR_CHOICES)
     branch = models.CharField(max_length=100)

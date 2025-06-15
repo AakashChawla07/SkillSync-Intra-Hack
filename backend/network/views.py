@@ -22,6 +22,7 @@ def network_dashboard(request):
     context = {
         'accepted_buddies': accepted_buddies,
         'pending_requests': pending_requests,
+        
     }
     
     return render(request, 'network/dashboard.html', context)

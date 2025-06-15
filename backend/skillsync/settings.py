@@ -55,7 +55,7 @@ TEMPLATES = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'skillsync_db',
+        'NAME': 'skillsync_db4',
         'USER': 'root',
         'PASSWORD': 'Aakash07012007@',
         'HOST': 'localhost',
@@ -86,3 +86,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = 'login'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'write-college-mail'
+EMAIL_HOST_PASSWORD = 'write-your-password'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'write-college-mail'

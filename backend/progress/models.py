@@ -1,8 +1,8 @@
 from django.db import models
-
-# Create your models here.
 from accounts.models import User
 from domains.models import TechDomain
+
+# Create your models here.
 
 class Goal(models.Model):
     PRIORITY_CHOICES = [

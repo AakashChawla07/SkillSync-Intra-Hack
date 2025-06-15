@@ -14,6 +14,14 @@ from .models import User
 
 # Create your views here.
 
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
+from django.contrib import messages
+from django.urls import reverse_lazy
+from .forms import UserRegistrationForm, ProfileSetupForm
+
 def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
@@ -49,6 +57,21 @@ def profile_view(request):
 class CustomLoginView(LoginView):
     template_name = 'accounts/login.html'
     redirect_authenticated_user = True
+    success_url = reverse_lazy('dashboard')  # Add success URL
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Login - SkillSync'
+        return context
+    
+    def form_valid(self, form):
+        messages.success(self.request, 'Welcome back! You have successfully logged in.')
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'Invalid email or password. Please try again.')
+        return super().form_invalid(form)
+
 
 @login_required
 def logout_view(request):

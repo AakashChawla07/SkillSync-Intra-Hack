@@ -37,6 +37,9 @@ By making progress transparent and mentorship easy, SkillSync turns your society
   Get auto-generated summaries and motivational feedback like:  
   "You're consistent! Now try building a mini-project to apply your skills."
 
+- ✉️ Email Report Automation      
+  A custom Python script automatically emails all registered users a Weekly Summary of their progress, helping them stay accountable and aligned with their goals.
+
 - 🔍 Peer Discovery  
   Filter and connect with members based on shared learning domains or goals.
 

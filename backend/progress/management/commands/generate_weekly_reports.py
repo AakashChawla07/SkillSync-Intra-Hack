@@ -11,13 +11,11 @@ class Command(BaseCommand):
     help = 'Generate weekly progress reports for all users'
 
     def handle(self, *args, **options):
-        # today = date.today()
-        # week_start = today - timedelta(days=today.weekday())
+        today = date.today()
+        week_start = today - timedelta(days=today.weekday())
         
-        # week_end = week_start + timedelta(days=6)
+        week_end = week_start + timedelta(days=6)
         
-        now = datetime.now()
-        one_minute_ago = now - timedelta(minutes=1)
         motivational_messages = [
             "Great effort this week! Your consistency is paying off.",
             "You're making solid progress. Keep up the momentum!",
@@ -37,20 +35,18 @@ class Command(BaseCommand):
             
             if WeeklyProgressReport.objects.filter(
                 user=user, 
-                week_start=now
+                week_start=week_start
             ).exists():
-                self.stdout.write(f'Skipping {user.username} - report already exists for this minute')
                 continue
             
             goals_completed = Goal.objects.filter(
                 user=user,
-                completed_at__range=[one_minute_ago, now]
+                completed_at__range=[week_start, week_end]
             ).count()
             
             tasks_completed = GoalTask.objects.filter(
                 goal__user=user,
-                # completed_at__date__range=[week_start, week_end]
-                completed_at__range=[one_minute_ago, now]
+                completed_at__date__range=[week_start, week_end]
             ).count()
             
             active_domains = TechDomain.objects.filter(
@@ -60,8 +56,8 @@ class Command(BaseCommand):
             
             report = WeeklyProgressReport.objects.create(
                 user=user,
-                week_start=now,#week_start,
-                week_end=one_minute_ago,#week_end,
+                week_start=week_start,
+                week_end=week_end,
                 goals_completed=goals_completed,
                 tasks_completed=tasks_completed,
                 motivational_message=random.choice(motivational_messages),
@@ -70,9 +66,6 @@ class Command(BaseCommand):
             
             report.domains_active.set(active_domains)
             
-            # self.stdout.write(
-            #     self.style.SUCCESS(f'Generated report for {user.username}')
-            # )
             try:
                 utils.send_weekly_motivation_email(user, report)
                 self.stdout.write(

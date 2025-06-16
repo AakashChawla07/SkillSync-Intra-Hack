@@ -8,6 +8,9 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    'channels',
+    'daphne',
+    'network',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -17,9 +20,16 @@ INSTALLED_APPS = [
     'accounts',
     'domains',
     'resources',
-    'network',
     'progress',
 ]
+
+ASGI_APPLICATION = 'skillsync.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -34,7 +44,8 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'skillsync.urls'
 
 AUTH_USER_MODEL = 'accounts.User'
-
+USE_TZ = True
+TIME_ZONE = 'UTC'
 
 TEMPLATES = [
     {
@@ -55,9 +66,9 @@ TEMPLATES = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'skillsync_db3',
+        'NAME': 'skillsync_db2',
         'USER': 'root',
-        'PASSWORD': 'Aakash07012007@',
+        'PASSWORD': 'write-your-password',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -86,7 +97,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = 'login'
-# DEFAULT_FROM_EMAIL= 'aakashprivate07@gmail.com'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'write-college-mail'

@@ -29,4 +29,5 @@ urlpatterns = [
     path('resources/', include('resources.urls')),
     path('network/', include('network.urls')),
     path('progress/', include('progress.urls')),
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

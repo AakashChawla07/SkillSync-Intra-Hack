@@ -3,101 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}SkillSync - Learn, Connect, Grow{% endblock %}</title>
-    
-    <!-- Bootstrap & FontAwesome -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
+    <title>SkillSync - CCS Tech Community</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #f8f9fa;
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
         }
-        .navbar-brand {
-            font-weight: 600;
-            font-size: 1.3rem;
+        .domain-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
-        .navbar-nav .nav-link {
-            font-weight: 500;
+        .profile-card:hover {
+            transform: translateY(-3px);
         }
-        .dropdown-menu a {
-            font-weight: 500;
-        }
-        .alert {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-        main.container-fluid {
-            max-width: 1140px;
+        .progress-bar {
+            transition: width 1s ease-in-out;
         }
     </style>
-
-    {% block extra_css %}{% endblock %}
 </head>
 <body>
-
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="{% url 'dashboard' %}">
-                <i class="fas fa-graduation-cap me-2"></i>SkillSync
-            </a>
-
-            {% if user.is_authenticated %}
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- Left navigation -->
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard' %}">
-                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'domain_list' %}">
-                            <i class="fas fa-code me-1"></i>Domains
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'resource_list' %}">
-                            <i class="fas fa-book me-1"></i>Resources
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'network_dashboard' %}">
-                            <i class="fas fa-users me-1"></i>Network
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'progress_dashboard' %}">
-                            <i class="fas fa-chart-line me-1"></i>Progress
-                        </a>
-                    </li>
-                </ul>
-
-                <!-- Right dropdown -->
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user me-1"></i>{{ user.get_full_name|default:user.username }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <a class="dropdown-item" href="{% url 'profile' %}">
-                                    <i class="fas fa-user-circle me-2"></i>Profile
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
+    <nav class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    <span class="container">
+                        <a class="text-xl font-bold" href="{% url 'dashboard' %}">
+                            
+                            <i class="text-xl font-bold"></i>SkillSync
+                        </a> 
+                    </span>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="{% url "dashboard" %}" class="font-medium hover:text-indigo-200 transition">Home</a>
+                    <a href="{% url "profile" %}" class="font-medium hover:text-indigo-200 transition">My Profile</a>
+                    <a href="{% url "domain_list" %}" class="font-medium hover:text-indigo-200 transition">Domains</a>
+                    <a href="{% url "resource_list" %}" class="font-medium hover:text-indigo-200 transition">Resources</a>
+                    <a href="{% url "progress_dashboard" %}" class="font-medium hover:text-indigo-200 transition">Progress</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS11c2VyLWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSIzIi8+PHBhdGggZD0iTTcgMjAuNjZWMTlhMiAyIDAgMCAxIDItMmg2YTIgMiAwIDAgMSAyIDJ2MS42NiIvPjwvc3ZnPg==" alt="User" class="h-8 w-8 rounded-full bg-white p-1">
+                        <span class="font-medium hidden md:block">{{ user.first_name }} {{ user.last_name }}</span>
+                    </div>
+                    <div class="w-10 bg-gray-10 p-4 flex space-x-2 ">
+                        <form method="POST" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="text-sm font-medium text-white-600 hover:text-indigo-800">
+                                Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            {% endif %}
         </div>
     </nav>
+
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-b from-indigo-600 to-indigo-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center">
+                <h1 class="text-4xl font-bold mb-4">Track, Connect, Grow</h1>
+                <p class="text-xl mb-8">Share your tech journey, discover what your peers are working on, and connect with the CCS community.</p>
+                <div class="flex flex-col md:flex-row justify-center gap-4">
+                    <button id="exploreDomainsBtn" class="bg-white text-indigo-700 font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-50 transition">Explore Domains</button>
+                    <button id="viewResourcesBtn" class="bg-indigo-500 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-400 transition">View Resources</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Flash Messages -->
     {% if messages %}
@@ -111,7 +90,7 @@
     </div>
     {% endif %}
 
-    <!-- Main Content -->
+        <!-- Main Content -->
     <main class="container-fluid py-4">
         {% block content %}{% endblock %}
     </main>
@@ -119,5 +98,7 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_js %}{% endblock %}
+</body>
+</html>
 </body>
 </html>

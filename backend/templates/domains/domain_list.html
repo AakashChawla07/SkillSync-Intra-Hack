@@ -3,59 +3,458 @@
 {% block title %}Tech Domains - SkillSync{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        <h2 class="mb-4">
-            <i class="fas fa-code me-2"></i>Tech Domains
-        </h2>
+    <!-- Page Header -->
+    <div class="bg-gradient-to-b from-indigo-600 to-indigo-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-4xl font-bold mb-4">Tech Domains</h1>
+                <p class="text-xl mb-8">Explore different technology domains, connect with peers, and discover learning resources.</p>
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="relative flex-grow">
+                        <input type="text" placeholder="Search domains or technologies..." class="w-full pl-10 pr-4 py-3 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 absolute left-3 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <button class="bg-white text-indigo-700 font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-50 transition">Filter</button>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 
-<div class="row">
-    {% for domain in domains %}
-    <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card h-100">
-            {% if domain.image %}
-            <img src="{{ domain.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ domain.name }}">
-            {% else %}
-            <div class="card-img-top bg-primary d-flex align-items-center justify-content-center" style="height: 200px;">
-                <i class="fas fa-code fa-4x text-white"></i>
-            </div>
-            {% endif %}
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-12">
             
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title">{{ domain.name }}</h5>
-                <p class="card-text flex-grow-1">{{ domain.description|truncatewords:20 }}</p>
-                
-                <div class="mb-3">
-                    <small class="text-muted">
-                        <i class="fas fa-users me-1"></i>{{ domain.member_count }} members
-                    </small>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Frontend Development -->
+                <div class="domain-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                    <div class="h-3 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800">Frontend Development</h3>
+                                <p class="text-indigo-600 text-sm">42 members</p>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-indigo-600 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <p class="mb-4 text-gray-600">HTML, CSS, JavaScript, React, Vue, Angular and modern UI frameworks</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">React</span>
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">JavaScript</span>
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">CSS</span>
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">HTML</span>
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Vue</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex -space-x-2">
+                                <div class="h-8 w-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-xs">AS</div>
+                                <div class="h-8 w-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-xs">RK</div>
+                                <div class="h-8 w-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-xs">VP</div>
+                                <div class="h-8 w-8 rounded-full bg-indigo-500 text-white flex items-center justify-center text-xs font-medium">+39</div>
+                            </div>
+                            <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition">View Details</button>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Backend Development -->
+                <div class="domain-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                    <div class="h-3 bg-gradient-to-r from-green-500 to-teal-600"></div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800">Backend Development</h3>
+                                <p class="text-green-600 text-sm">38 members</p>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-600 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+                            </svg>
+                        </div>
+                        <p class="mb-4 text-gray-600">Node.js, Python, Java, Databases, APIs, and server architecture</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Node.js</span>
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Python</span>
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">MongoDB</span>
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">SQL</span>
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Express</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex -space-x-2">
+                                <div class="h-8 w-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold text-xs">SK</div>
+                                <div class="h-8 w-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold text-xs">MJ</div>
+                                <div class="h-8 w-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold text-xs">DP</div>
+                                <div class="h-8 w-8 rounded-full bg-green-500 text-white flex items-center justify-center text-xs font-medium">+35</div>
+                            </div>
+                            <button class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cybersecurity -->
+                <div class="domain-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                    <div class="h-3 bg-gradient-to-r from-purple-500 to-pink-600"></div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800">Cybersecurity</h3>
+                                <p class="text-purple-600 text-sm">27 members</p>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-600 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        </div>
+                        <p class="mb-4 text-gray-600">Network security, ethical hacking, cryptography, and security analysis</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Kali Linux</span>
+                            <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Penetration Testing</span>
+                            <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Cryptography</span>
+                            <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Network Security</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex -space-x-2">
+                                <div class="h-8 w-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-xs">RS</div>
+                                <div class="h-8 w-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-xs">AK</div>
+                                <div class="h-8 w-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-xs">NP</div>
+                                <div class="h-8 w-8 rounded-full bg-purple-500 text-white flex items-center justify-center text-xs font-medium">+24</div>
+                            </div>
+                            <button class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Machine Learning -->
+                <div class="domain-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                    <div class="h-3 bg-gradient-to-r from-yellow-500 to-orange-600"></div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800">Machine Learning</h3>
+                                <p class="text-yellow-600 text-sm">31 members</p>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-yellow-600 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                        </div>
+                        <p class="mb-4 text-gray-600">AI, neural networks, data science, and predictive modeling</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">TensorFlow</span>
+                            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">PyTorch</span>
+                            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Neural Networks</span>
+                            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Data Science</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex -space-x-2">
+                                <div class="h-8 w-8 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center font-bold text-xs">PK</div>
+                                <div class="h-8 w-8 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center font-bold text-xs">SG</div>
+                                <div class="h-8 w-8 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center font-bold text-xs">AR</div>
+                                <div class="h-8 w-8 rounded-full bg-yellow-500 text-white flex items-center justify-center text-xs font-medium">+28</div>
+                            </div>
+                            <button class="bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-700 transition">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DevOps -->
+                <div class="domain-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                    <div class="h-3 bg-gradient-to-r from-red-500 to-rose-600"></div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800">DevOps</h3>
+                                <p class="text-red-600 text-sm">19 members</p>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-red-600 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                            </svg>
+                        </div>
+                        <p class="mb-4 text-gray-600">CI/CD, containerization, cloud infrastructure, and automation</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">Docker</span>
+                            <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">Kubernetes</span>
+                            <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">Jenkins</span>
+                            <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">AWS</span>
+                            <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">CI/CD</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex -space-x-2">
+                                <div class="h-8 w-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-xs">VK</div>
+                                <div class="h-8 w-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-xs">SM</div>
+                                <div class="h-8 w-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-xs">JD</div>
+                                <div class="h-8 w-8 rounded-full bg-red-500 text-white flex items-center justify-center text-xs font-medium">+16</div>
+                            </div>
+                            <button class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Development -->
+                <div class="domain-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                    <div class="h-3 bg-gradient-to-r from-cyan-500 to-blue-600"></div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800">Mobile Development</h3>
+                                <p class="text-cyan-600 text-sm">23 members</p>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-cyan-600 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <p class="mb-4 text-gray-600">iOS, Android, React Native, Flutter, and cross-platform development</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="bg-cyan-100 text-cyan-800 text-xs font-medium px-2.5 py-0.5 rounded">React Native</span>
+                            <span class="bg-cyan-100 text-cyan-800 text-xs font-medium px-2.5 py-0.5 rounded">Flutter</span>
+                            <span class="bg-cyan-100 text-cyan-800 text-xs font-medium px-2.5 py-0.5 rounded">Swift</span>
+                            <span class="bg-cyan-100 text-cyan-800 text-xs font-medium px-2.5 py-0.5 rounded">Kotlin</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex -space-x-2">
+                                <div class="h-8 w-8 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center font-bold text-xs">RJ</div>
+                                <div class="h-8 w-8 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center font-bold text-xs">KP</div>
+                                <div class="h-8 w-8 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center font-bold text-xs">LM</div>
+                                <div class="h-8 w-8 rounded-full bg-cyan-500 text-white flex items-center justify-center text-xs font-medium">+20</div>
+                            </div>
+                            <button class="bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-cyan-700 transition">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
                 
-                <div class="mt-auto">
-                    {% if domain.id in user_domains %}
-                        <a href="{% url 'domain_detail' domain.id %}" class="btn btn-success">
-                            <i class="fas fa-check me-1"></i>Joined
-                        </a>
-                    {% else %}
-                        <a href="{% url 'join_domain' domain.id %}" class="btn btn-primary">
-                            <i class="fas fa-plus me-1"></i>Join Domain
-                        </a>
-                    {% endif %}
-                    <a href="{% url 'domain_detail' domain.id %}" class="btn btn-outline-primary">
-                        <i class="fas fa-eye me-1"></i>View Details
-                    </a>
+            </div>
+        </div>
+
+        <!-- Join a Domain Section -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Join a New Domain</h2>
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="p-6">
+                    <p class="text-gray-600 mb-6">Expand your skills by joining additional tech domains. Select domains you're interested in and set your proficiency level.</p>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="join-domain1" class="h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500">
+                                <label for="join-domain1" class="ml-3">
+                                    <span class="block text-gray-800 font-medium">Frontend Development</span>
+                                    <span class="block text-gray-500 text-sm">42 members</span>
+                                </label>
+                            </div>
+                            <select class="bg-gray-100 border border-gray-300 text-gray-700 rounded-lg px-3 py-1 text-sm">
+                                <option>Beginner</option>
+                                <option>Intermediate</option>
+                                <option>Advanced</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="join-domain2" class="h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500">
+                                <label for="join-domain2" class="ml-3">
+                                    <span class="block text-gray-800 font-medium">Backend Development</span>
+                                    <span class="block text-gray-500 text-sm">38 members</span>
+                                </label>
+                            </div>
+                            <select class="bg-gray-100 border border-gray-300 text-gray-700 rounded-lg px-3 py-1 text-sm">
+                                <option>Beginner</option>
+                                <option>Intermediate</option>
+                                <option>Advanced</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="join-domain3" class="h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500">
+                                <label for="join-domain3" class="ml-3">
+                                    <span class="block text-gray-800 font-medium">Cybersecurity</span>
+                                    <span class="block text-gray-500 text-sm">27 members</span>
+                                </label>
+                            </div>
+                            <select class="bg-gray-100 border border-gray-300 text-gray-700 rounded-lg px-3 py-1 text-sm">
+                                <option>Beginner</option>
+                                <option>Intermediate</option>
+                                <option>Advanced</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="join-domain4" class="h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500">
+                                <label for="join-domain4" class="ml-3">
+                                    <span class="block text-gray-800 font-medium">Machine Learning</span>
+                                    <span class="block text-gray-500 text-sm">31 members</span>
+                                </label>
+                            </div>
+                            <select class="bg-gray-100 border border-gray-300 text-gray-700 rounded-lg px-3 py-1 text-sm">
+                                <option>Beginner</option>
+                                <option>Intermediate</option>
+                                <option>Advanced</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end">
+                        <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition">Join Selected Domains</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create New Domain Section (For Senior Members) -->
+        <div>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Create New Domain</h2>
+                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded">Senior Members Only</span>
+            </div>
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="p-6">
+                    <p class="text-gray-600 mb-6">As a senior member, you can propose a new technology domain for SkilSync community. Fill out the details below to submit your proposal.</p>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label for="domain-name" class="block text-gray-700 font-medium mb-2">Domain Name</label>
+                            <input type="text" id="domain-name" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., Quantum Computing">
+                        </div>
+                        <div>
+                            <label for="domain-description" class="block text-gray-700 font-medium mb-2">Domain Description</label>
+                            <textarea id="domain-description" rows="4" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Describe the focus and scope of this domain..."></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Key Technologies</label>
+                            <div class="flex flex-wrap gap-2 mb-2">
+                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded flex items-center">
+                                    Technology 1
+                                    <button class="ml-1 text-indigo-800 hover:text-indigo-900">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </span>
+                            </div>
+                            <div class="flex">
+                                <input type="text" id="tech-input" placeholder="Add technology..." class="flex-grow border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <button id="add-tech-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-r-lg transition">Add</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="domain-resources" class="block text-gray-700 font-medium mb-2">Initial Resources (Optional)</label>
+                            <textarea id="domain-resources" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="List any initial learning resources for this domain..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 flex justify-end">
+                        <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-6 rounded-lg mr-4 transition">Cancel</button>
+                        <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition">Submit Proposal</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    {% empty %}
-    <div class="col-12">
-        <div class="alert alert-info">
-            <i class="fas fa-info-circle me-2"></i>No domains available at the moment.
+
+    <!-- Domain Detail Modal -->
+    <div id="domainDetailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 rounded-t-xl">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Frontend Development</h2>
+                        <p class="text-blue-100">42 members • 15 resources</p>
+                    </div>
+                    <button id="closeDomainDetailModal" class="text-white hover:text-blue-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="p-6">
+                <!-- Tabs -->
+                <div class="border-b border-gray-200 mb-6">
+                    <div class="flex overflow-x-auto">
+                        <button class="tab-active px-4 py-2 font-medium text-sm">Overview</button>
+                        <button class="tab-inactive px-4 py-2 font-medium text-sm">Members</button>
+                        <button class="tab-inactive px-4 py-2 font-medium text-sm">Resources</button>
+                        <button class="tab-inactive px-4 py-2 font-medium text-sm">Projects</button>
+                        <button class="tab-inactive px-4 py-2 font-medium text-sm">Opportunities</button>
+                        <button class="tab-inactive px-4 py-2 font-medium text-sm">Discussions</button>
+                    </div>
+                </div>
+                
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Domain Description</h3>
+                    <p class="text-gray-600">Frontend development focuses on creating the user interface and experience of web applications. This domain covers HTML, CSS, JavaScript, and modern frameworks like React, Vue, and Angular. Members in this domain work on responsive design, UI/UX implementation, and client-side functionality.</p>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Members</h3>
+                        <div class="relative">
+                            <input type="text" placeholder="Search members..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        <div class="bg-white border border-gray-200 rounded-lg p-4 flex items-center">
+                            <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600 text-sm">AS</div>
+                            <div class="ml-3">
+                                <h4 class="font-medium text-gray-800">Aditya Singh</h4>
+                                <p class="text-sm text-gray-500">Intermediate</p>
+                            </div>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-lg p-4 flex items-center">
+                            <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600 text-sm">RK</div>
+                            <div class="ml-3">
+                                <h4 class="font-medium text-gray-800">Rahul Kumar</h4>
+                                <p class="text-sm text-gray-500">Advanced</p>
+                            </div>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-lg p-4 flex items-center">
+                            <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600 text-sm">VP</div>
+                            <div class="ml-3">
+                                <h4 class="font-medium text-gray-800">Vikram Patel</h4>
+                                <p class="text-sm text-gray-500">Advanced</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">View All Members</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    {% endfor %}
-</div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-10">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        <span class="text-xl font-bold">SkillSync</span>
+                    </div>
+                    <p class="text-gray-400">Track your tech journey, connect with peers, and grow together with the SkillSync Community.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">Home</a></li>
+                        <li><a href="#" class="hover:text-white transition">My Profile</a></li>
+                        <li><a href="#" class="hover:text-white transition">Tech Domains</a></li>
+                        <li><a href="#" class="hover:text-white transition">Resources</a></li>
+                        <li><a href="#" class="hover:text-white transition">Community</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0">
+                            </svg>
+                </div>
+            </div>
+        </div>
+    </footer>
 {% endblock %}

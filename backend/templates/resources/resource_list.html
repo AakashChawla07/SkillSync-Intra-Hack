@@ -1,117 +1,350 @@
 <!-- resources/resource_list.html -->
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Resources - SkillSync{% endblock %}
 
+{% block extra_css %}
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    .tab-active {
+        @apply border-b-2 border-indigo-500 text-indigo-600 bg-white;
+    }
+    .tab-inactive {
+        @apply text-gray-500 hover:text-gray-700 hover:bg-gray-50 border-b-2 border-transparent;
+    }
+    .resource-card:hover {
+        @apply shadow-lg transform -translate-y-1;
+    }
+    .bookmark-btn:hover .bookmark-icon {
+        @apply fill-current;
+    }
+    .bookmark-active .bookmark-icon {
+        @apply fill-current;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2><i class="fas fa-book me-2"></i>Learning Resources</h2>
-            {% if request.user.is_authenticated and request.user.role == 'mentor' %}
-            <a href="{% url 'upload_resource' %}" class="btn btn-primary">
-                <i class="fas fa-upload me-1"></i>Upload Resource
-            </a>
-            {% endif %}
-        </div>
-    </div>
-</div>
-
-<!-- Filters -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <form method="get" class="row g-3">
-                    <div class="col-md-3">
-                        <label for="domain" class="form-label">Domain</label>
-                        <select name="domain" id="domain" class="form-select">
-                            <option value="">All Domains</option>
-                            {% for domain in domains %}
-                            <option value="{{ domain.id }}" {% if domain.id|stringformat:"s" == selected_domain %}selected{% endif %}>
-                                {{ domain.name }}
-                            </option>
-                            {% endfor %}
-                        </select>
+    <!-- Page Header -->
+    <div class="bg-gradient-to-b from-indigo-600 to-indigo-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-4xl font-bold mb-4">Learning Resources</h1>
+                <p class="text-xl mb-8">Discover curated learning materials, tutorials, and tools to enhance your tech skills.</p>
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="relative flex-grow">
+                        <form method="get" action="{% url 'filter_resources' %}" id="search-form">
+                            <input type="text" name="search" value="{{ search_query }}" 
+                                   placeholder="Search resources by title, topic, or keyword..." 
+                                   class="w-full pl-10 pr-4 py-3 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-300 text-gray-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 absolute left-3 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </form>
                     </div>
-                    
-                    <div class="col-md-3">
-                        <label for="type" class="form-label">Type</label>
-                        <select name="type" id="type" class="form-select">
-                            <option value="">All Types</option>
-                            {% for type_code, type_name in resource_types %}
-                            <option value="{{ type_code }}" {% if type_code == selected_type %}selected{% endif %}>
-                                {{ type_name }}
-                            </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    
-                    <div class="col-md-4">
-                        <label for="search" class="form-label">Search</label>
-                        <input type="text" name="search" id="search" class="form-control" 
-                               value="{{ search_query }}" placeholder="Search resources...">
-                    </div>
-                    
-                    <div class="col-md-2">
-                        <label class="form-label">&nbsp;</label>
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-search me-1"></i>Filter
-                        </button>
-                    </div>
-                </form>
+                    {% if request.user.is_authenticated and request.user.role != 'student' %}
+                    <a href="{% url 'upload_resource' %}" class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition">
+                        Upload Resource
+                    </a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Resources Grid -->
-<div class="row">
-    {% for resource in resources %}
-    <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body d-flex flex-column">
-                <div class="d-flex align-items-start mb-2">
-                    <div class="me-2">
-                        <i class="fas fa-{% if resource.resource_type == 'video' %}video{% elif resource.resource_type == 'document' %}file-alt{% elif resource.resource_type == 'link' %}link{% else %}book{% endif %} fa-2x text-primary"></i>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-12">
+        <!-- Resource Categories -->        
+        <div class="mb-10">
+            <div class="flex overflow-x-auto pb-2 mb-6 space-x-6">
+                <a href="{% url 'resource_list' %}" class="tab-active whitespace-nowrap px-4 py-2 font-medium text-sm">
+                            All Resources
+                </a>
+                <a href="{% url 'resource_list' %}?resource_type=tutorial" class="tab-active whitespace-nowrap px-4 py-2 font-medium text-sm">
+                            Tutorial
+                </a>
+                <a href="{% url 'resource_list' %}?resource_type=documentation" class="tab-active whitespace-nowrap px-4 py-2 font-medium text-sm">
+                            Documentation
+                </a>
+                <a href="{% url 'resource_list' %}?resource_type=video" class="tab-active whitespace-nowrap px-4 py-2 font-medium text-sm">
+                            Videos
+                </a>
+                <a href="{% url 'resource_list' %}?resource_type=opportunity" class="tab-active whitespace-nowrap px-4 py-2 font-medium text-sm">
+                            Opportunity
+                </a>
+                <a href="{% url 'resource_list' %}?resource_type=project" class="tab-active whitespace-nowrap px-4 py-2 font-medium text-sm">
+                            Project
+                </a>
+            </div>
+        </div>
+
+        <!-- Resources by Domain -->
+        <div class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Resources by Domain</h2>
+                <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center" href ={% url "domain_list" %}>
+                    View All Domains
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Domain Tabs -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+                <div class="border-b border-gray-200">
+                    <div class="flex overflow-x-auto">
+                        {% for domain in domains %}
+                        <a href="{% url 'resource_list' %}?domain={{ domain.id }}" class="hover:text-indigo-600 px-6 py-3 font-medium text-sm">
+                            {{ domain.name }}
+                        </a>
+                        {% endfor %}
                     </div>
-                    <div class="flex-grow-1">
-                        <h5 class="card-title">
-                            <a href="{% url 'resource_detail' resource.id %}" class="text-decoration-none">
-                                {{ resource.title }}
+                </div>
+                <div class="p-6" id="domain-resources-container">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {% for resource in domain_resources %}
+                        <div class="flex border border-gray-200 rounded-lg overflow-hidden">
+                            <div class="bg-blue-100 p-4 flex items-center justify-center">
+                                {% if resource.resource_type == 'video' %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                </svg>
+                                {% elif resource.resource_type == 'document' %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                {% else %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                                {% endif %}
+                            </div>
+                            <div class="p-4 flex-grow">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-semibold text-gray-800">
+                                        <a href="{% url 'resource_detail' resource.id %}" class="hover:text-indigo-600">
+                                            {{ resource.title|truncatechars:40 }}
+                                        </a>
+                                    </h3>
+                                    <button onclick="toggleBookmark({{ resource.id }})" 
+                                            class="bookmark-btn text-gray-400 hover:text-indigo-600"
+                                            data-resource-id="{{ resource.id }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 bookmark-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                                            <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-3">{{ resource.description|truncatechars:80 }}</p>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <div class="h-5 w-5 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-xs mr-1">
+                                            {{ resource.uploaded_by.first_name.0|default:resource.uploaded_by.username.0|upper }}{{ resource.uploaded_by.last_name.0|default:""|upper }}
+                                        </div>
+                                        <span class="text-xs text-gray-500">{{ resource.uploaded_by.get_full_name|default:resource.uploaded_by.username }}</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="text-xs text-gray-500">{{ resource.created_at|date:"M d" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if default_domain %}
+                    <div class="mt-6 text-center">
+                        <a href="{% url 'resource_list' %}?domain={{ default_domain.id }}" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                            View All {{ default_domain.name }} Resources
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recently Added Resources -->
+        <div class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Recently Added</h2>
+                <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                    View All
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {% for resource in recent_resources %}
+                <div class="resource-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                    <div class="h-2 bg-{{ resource.domain.name|lower|slice:':3' }}-500" style="background: linear-gradient(45deg, #{{ resource.id|stringformat:'x' }}{{ resource.id|add:100|stringformat:'x' }}, #{{ resource.id|add:200|stringformat:'x' }}{{ resource.id|stringformat:'x' }});"></div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="bg-indigo-100 p-1.5 rounded-lg">
+                                {% if resource.resource_type == 'video' %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                </svg>
+                                {% elif resource.resource_type == 'document' %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                {% else %}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                                {% endif %}
+                            </div>
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded">New</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800 mb-2">
+                            <a href="{% url 'resource_detail' resource.id %}" class="hover:text-indigo-600">
+                                {{ resource.title|truncatechars:30 }}
                             </a>
-                        </h5>
-                        <span class="badge bg-primary">{{ resource.domain.name }}</span>
-                        <span class="badge bg-secondary">{{ resource.get_resource_type_display }}</span>
+                        </h3>
+                        <p class="text-sm text-gray-600 mb-3">{{ resource.description|truncatechars:60 }}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-500">{{ resource.created_at|timesince }} ago</span>
+                            <a href="{% url 'resource_detail' resource.id %}" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">View</a>
+                        </div>
                     </div>
                 </div>
-                
-                <p class="card-text flex-grow-1">{{ resource.description|truncatewords:20 }}</p>
-                
-                <div class="mt-auto">
-                    <small class="text-muted">
-                        <i class="fas fa-user me-1"></i>{{ resource.uploaded_by.get_full_name|default:resource.uploaded_by.username }}
-                        <i class="fas fa-calendar ms-2 me-1"></i>{{ resource.created_at|date:"M d, Y" }}
-                    </small>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Featured Resource -->
+        {% if featured_resource %}
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Featured Resource</h2>
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 text-white">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-2xl font-bold">{{ featured_resource.title }}</h3>
+                            <p class="text-blue-100">Shared by {{ featured_resource.uploaded_by.get_full_name|default:featured_resource.uploaded_by.username }} • {{ featured_resource.created_at|timesince }} ago</p>
+                        </div>
+                        <div class="flex items-center">
+                            <button onclick="toggleBookmark({{ featured_resource.id }})" 
+                                    class="bookmark-btn text-white"
+                                    data-resource-id="{{ featured_resource.id }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 bookmark-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                                    <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="mb-8">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-4">Description</h4>
+                        <p class="text-gray-600 mb-4">{{ featured_resource.description }}</p>
+                        
+                        {% if featured_resource.tags %}
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            {% for tag in featured_resource.tags %}
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">{{ tag.strip }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-indigo-50 rounded-lg p-4">
+                            <div class="flex items-center mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a.997.997 0 01-1.414 0l-7-7A1.997 1.997 0 013 12V7a4 4 0 014-4z" />
+                                </svg>
+                                <h5 class="font-semibold text-indigo-800">Type</h5>
+                            </div>
+                            <p class="text-indigo-700 text-sm">{{ featured_resource.get_resource_type_display }}</p>
+                        </div>
+                        <div class="bg-indigo-50 rounded-lg p-4">
+                            <div class="flex items-center mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                </svg>
+                                <h5 class="font-semibold text-indigo-800">Domain</h5>
+                            </div>
+                            <p class="text-indigo-700 text-sm">{{ featured_resource.domain.name }}</p>
+                        </div>
+                        <div class="bg-indigo-50 rounded-lg p-4">
+                            <div class="flex items-center mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                                <h5 class="font-semibold text-indigo-800">Bookmarks</h5>
+                            </div>
+                            <p class="text-indigo-700 text-sm" id="bookmark-count-{{ featured_resource.id }}">{{ featured_resource.resourcebookmark_set.count }} bookmarks</p>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <a href="{% url 'resource_detail' featured_resource.id %}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg transition">
+                            View Resource
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
+        {% endif %}
+
+        <!-- All Resources (Filtered Results) -->
+    <div id="filtered-resources">
+    {% if resources %}
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Filtered Resources</h2>
+        <p class="text-gray-600">{{ resources|length }} resources found</p>
     </div>
-    {% empty %}
-    <div class="col-12">
-        <div class="alert alert-info text-center">
-            <i class="fas fa-info-circle fa-2x mb-3"></i>
-            <h5>No resources found</h5>
-        {% if request.user.is_authenticated and request.user.role == 'mentor' %}
-            <p>Try adjusting your filters or be the first to upload a resource!</p>
-            <a href="{% url 'upload_resource' %}" class="btn btn-primary">
-                <i class="fas fa-upload me-1"></i>Upload Resource
-            </a>
-        {% else %}
-                <p>Try adjusting your filters</p>
-        {% endif %}    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for resource in resources %}
+        <div class="resource-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="bg-indigo-100 p-2 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        
+                    </div>
+                    <button onclick="toggleBookmark({{ resource.id }})" 
+                            class="bookmark-btn text-gray-400 hover:text-indigo-600"
+                            data-resource-id="{{ resource.id }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 bookmark-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5v16l7-5 7 5V5a2 2 0 00-2-2H7a2 2 0 00-2 2z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <a href="{% url 'resource_detail' resource.id %}" class="hover:text-indigo-600">
+                   {{ resource.title|truncatechars:40 }}
+                </a>
+
+                <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                    {{ resource.description|truncatewords:25 }}
+                </p>
+
+                <div class="text-sm text-gray-500 mb-2">
+                    <span class="font-medium">Domain:</span> {{ resource.domain.name }}
+                </div>
+
+                <div class="text-sm text-gray-500">
+                    <span class="font-medium">Uploaded by:</span> {{ resource.uploaded_by.username }} |
+                    <span class="ml-1">{{ resource.created_at|date:"M d, Y" }}</span>
+                </div>
+            </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+    {% else %}
+    <div class="text-center py-16">
+        <h3 class="text-xl font-semibold text-gray-700 mb-4">No resources found.</h3>
+        <p class="text-gray-500">Try changing your filters or search keywords.</p>
+    </div>
+    {% endif %}
 </div>
+
+    </div>
+    
 {% endblock %}

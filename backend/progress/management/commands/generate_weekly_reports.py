@@ -70,6 +70,9 @@ class Command(BaseCommand):
             
             report.domains_active.set(active_domains)
             
+            # self.stdout.write(
+            #     self.style.SUCCESS(f'Generated report for {user.username}')
+            # )
             try:
                 utils.send_weekly_motivation_email(user, report)
                 self.stdout.write(

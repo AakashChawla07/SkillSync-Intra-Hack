@@ -1,252 +1,392 @@
-{% extends 'base.html' %}
-
-{% block title %}Profile - SkillSync{% endblock %}
-
+{% extends "base.html" %}
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2><i class="fas fa-user me-2"></i>My Profile</h2>
-            <a href="{% url 'profile_setup' %}" class="btn btn-primary">
-                <i class="fas fa-edit me-1"></i>Edit Profile
-            </a>
+<!-- Main Content -->
+<main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <!-- Profile Header -->
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+        <div class="h-32 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
+        <div class="px-4 py-5 sm:px-6 -mt-16 flex flex-col sm:flex-row sm:items-end">
+            <div class="flex-shrink-0">
+                <img class="h-24 w-24 rounded-full ring-4 ring-white sm:h-32 sm:w-32" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNjM2NkYxIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Ik0yMCAyMXYtMmE0IDQgMCAwIDAtNC00SDhhNCA0IDAgMCAwLTQgNHYyIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSI3IiByPSI0IiBmaWxsPSIjRUJGMkZGIi8+PC9zdmc+" alt="">
+            </div>
+            <div class="mt-6 sm:mt-0 sm:ml-6 flex-1">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-2xl font-bold text-gray-900">Aakash Chawla</h3>
+                    <a href = {% url "profile_setup" %} class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700" >Edit Profile</a>
+                </div>
+                <p class="text-sm text-gray-500">@Aakash • Student • Computer Science</p>
+            </div>
+        </div>
+        <div class="border-t border-gray-200">
+            <div class="flex justify-between px-4 py-3 sm:px-6">
+                <div class="flex space-x-4">
+                    <div class="text-center">
+                        <span class="block text-lg font-medium text-gray-900" id="projects-count">3</span>
+                        <span class="block text-sm text-gray-500">Projects</span>
+                    </div>
+                    <div class="text-center">
+                        <span class="block text-lg font-medium text-gray-900">5</span>
+                        <span class="block text-sm text-gray-500">Domains</span>
+                    </div>
+                    <div class="text-center">
+                        <span class="block text-lg font-medium text-gray-900">75%</span>
+                        <span class="block text-sm text-gray-500">Completion</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <!-- Profile Information Card -->
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    {% if user.profile_picture %}
-                        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" 
-                             class="rounded-circle" width="120" height="120" style="object-fit: cover;">
-                    {% else %}
-                        <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center" 
-                             style="width: 120px; height: 120px;">
-                            <i class="fas fa-user fa-3x text-white"></i>
-                        </div>
-                    {% endif %}
+    <!-- Profile Tabs -->
+    <div class="mt-6">
+        <div class="border-b border-gray-200">
+            <nav class="-mb-px flex space-x-8">
+                <button class="tab-button tab-active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-tab="overview">Overview</button>
+                <button class="tab-button whitespace-nowrap py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700" data-tab="projects">Projects</button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="mt-6">
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content">
+            <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                <div class="bg-white shadow rounded-lg p-6 col-span-2">
+                    <h3 class="text-lg font-medium text-gray-900">About</h3>
+                    <p class="mt-2 text-gray-600">Passionate computer science student with expertise in web development and machine learning.</p>
+                    
+                    <h3 class="text-lg font-medium text-gray-900 mt-6">Current Focus</h3>
+                    <div class="mt-2 flex flex-wrap gap-2">
+                        <span class="skill-pill px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">Django</span>
+                        <span class="skill-pill px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">React</span>
+                        <span class="skill-pill px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">Machine Learning</span>
+                    </div>
                 </div>
                 
-                <h4 class="mb-1">{{ user.get_full_name|default:user.username }}</h4>
-                <p class="text-muted mb-2">@{{ user.username }}</p>
-                
-                <span class="badge bg-{{ user.role }} bg-opacity-10 text-{{ user.role }} mb-3 px-3 py-2">
-                    <i class="fas fa-{% if user.role == 'student' %}graduation-cap{% elif user.role == 'mentor' %}chalkboard-teacher{% elif user.role == 'senior' %}user-tie{% else %}user-shield{% endif %} me-1"></i>
-                    {{ user.get_role_display }}
-                </span>
-                
-                {% if user.bio %}
-                <p class="text-muted small">{{ user.bio }}</p>
-                {% endif %}
-                
-                <div class="d-flex justify-content-center gap-2 mt-3">
-                    {% if user.github_profile %}
-                    <a href="{{ user.github_profile }}" target="_blank" class="btn btn-outline-dark btn-sm">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    {% endif %}
-                    
-                    {% if user.linkedin_profile %}
-                    <a href="{{ user.linkedin_profile }}" target="_blank" class="btn btn-outline-primary btn-sm">
-                        <i class="fab fa-linkedin"></i>
-                    </a>
-                    {% endif %}
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-medium text-gray-900">Weekly Activity</h3>
+                    <div class="mt-2 h-32 bg-gray-100 rounded flex items-center justify-center">
+                        <span class="text-gray-500">Activity Chart</span>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <!-- Profile Completion -->
-        <div class="card mt-3">
-            <div class="card-header">
-                <h6 class="mb-0"><i class="fas fa-check-circle me-2"></i>Profile Completion</h6>
+        <!-- Projects Tab -->
+        <div id="projects" class="tab-content hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">My Projects</h2>
+                <button id="add-project-btn" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                    <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Add Project
+                </button>
             </div>
-            <div class="card-body">
-                {% if user.is_profile_complete %}
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-check-circle text-success me-2"></i>
-                        <span class="text-success">Profile Complete</span>
-                    </div>
-                {% else %}
-                    <div class="d-flex align-items-center mb-2">
-                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>
-                        <span class="text-warning">Profile Incomplete</span>
-                    </div>
-                    <small class="text-muted">Complete your profile to unlock all features</small>
-                {% endif %}
-            </div>
+
+            <div id="projects-grid" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
         </div>
     </div>
+</main>
+
+<!-- Add Project Modal -->
+<div id="add-project-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center modal hidden">
+    <div class="bg-white rounded-lg shadow-lg w-11/12 md:w-1/2 max-w-lg">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium text-gray-900">Add New Project</h3>
+                <button id="close-modal" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <form id="project-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Project Title</label>
+                    <input type="text" id="project-title" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter project title">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea id="project-description" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Describe your project"></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Domain</label>
+                    <select id="project-domain" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Select a domain</option>
+                        <option value="Web Development">Web Development</option>
+                        <option value="Mobile Development">Mobile Development</option>
+                        <option value="Machine Learning">Machine Learning</option>
+                        <option value="Data Science">Data Science</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Technologies</label>
+                    <input type="text" id="project-technologies" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., Django, React, PostgreSQL">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Status</label>
+                    <select id="project-status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="Planning">Planning</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" id="cancel-btn" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">Cancel</button>
+                    <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">Add Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Sample projects data
+let projects = [
+    {
+        id: 1,
+        title: "SkillSync Platform",
+        description: "A comprehensive platform for skill development and learning management built with Django and React.",
+        domain: "Web Development",
+        technologies: ["Django", "React", "PostgreSQL"],
+        status: "Completed",
+        icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+    },
+    {
+        id: 2,
+        title: "Sales Predictor ML",
+        description: "Machine learning model to predict sales trends using historical data and market analysis.",
+        domain: "Machine Learning",
+        technologies: ["Python", "TensorFlow", "Pandas"],
+        status: "In Progress",
+        icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+    },
+    {
+        id: 3,
+        title: "Task Manager App",
+        description: "Cross-platform mobile application for task management with real-time synchronization.",
+        domain: "Mobile Development",
+        technologies: ["React Native", "Node.js", "MongoDB"],
+        status: "Planning",
+        icon: "M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+    }
+];
+
+// DOM elements
+const tabButtons = document.querySelectorAll('.tab-button');
+const tabContents = document.querySelectorAll('.tab-content');
+const addProjectBtn = document.getElementById('add-project-btn');
+const modal = document.getElementById('add-project-modal');
+const closeModal = document.getElementById('close-modal');
+const cancelBtn = document.getElementById('cancel-btn');
+const projectForm = document.getElementById('project-form');
+const projectsGrid = document.getElementById('projects-grid');
+const projectsCount = document.getElementById('projects-count');
+
+// Color mappings for domains
+const domainColors = {
+    'Web Development': { bg: 'bg-indigo-100', text: 'text-indigo-600', pill: 'bg-blue-100 text-blue-800' },
+    'Mobile Development': { bg: 'bg-green-100', text: 'text-green-600', pill: 'bg-green-100 text-green-800' },
+    'Machine Learning': { bg: 'bg-purple-100', text: 'text-purple-600', pill: 'bg-purple-100 text-purple-800' },
+    'Data Science': { bg: 'bg-yellow-100', text: 'text-yellow-600', pill: 'bg-yellow-100 text-yellow-800' }
+};
+
+const statusColors = {
+    'Planning': 'bg-blue-100 text-blue-800',
+    'In Progress': 'bg-yellow-100 text-yellow-800',
+    'Completed': 'bg-green-100 text-green-800'
+};
+
+const techColors = ['bg-blue-100 text-blue-800', 'bg-green-100 text-green-800', 'bg-purple-100 text-purple-800', 'bg-red-100 text-red-800', 'bg-yellow-100 text-yellow-800', 'bg-indigo-100 text-indigo-800'];
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    renderProjects();
+    updateProjectsCount();
+});
+
+// Tab switching
+tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const targetTab = button.dataset.tab;
+        
+        // Update button states
+        tabButtons.forEach(btn => {
+            btn.classList.remove('tab-active');
+            btn.classList.add('text-gray-500', 'hover:text-gray-700', 'border-transparent');
+        });
+        button.classList.add('tab-active');
+        button.classList.remove('text-gray-500', 'hover:text-gray-700', 'border-transparent');
+        
+        // Show/hide content
+        tabContents.forEach(content => {
+            content.classList.add('hidden');
+        });
+        document.getElementById(targetTab).classList.remove('hidden');
+    });
+});
+
+// Modal controls
+addProjectBtn.addEventListener('click', () => showModal());
+closeModal.addEventListener('click', () => hideModal());
+cancelBtn.addEventListener('click', () => hideModal());
+
+// Form submission
+projectForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    addProject();
+});
+
+function showModal() {
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function hideModal() {
+    modal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+    projectForm.reset();
+}
+
+function addProject() {
+    const title = document.getElementById('project-title').value;
+    const description = document.getElementById('project-description').value;
+    const domain = document.getElementById('project-domain').value;
+    const technologies = document.getElementById('project-technologies').value.split(',').map(t => t.trim()).filter(t => t);
+    const status = document.getElementById('project-status').value;
     
-    <!-- Detailed Information -->
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h5><i class="fas fa-info-circle me-2"></i>Personal Information</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted small">Full Name</label>
-                        <p class="mb-0">{{ user.get_full_name|default:"Not provided" }}</p>
-                    </div>
-                    
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted small">Username</label>
-                        <p class="mb-0">{{ user.username }}</p>
-                    </div>
-                    
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted small">College Email</label>
-                        <p class="mb-0">{{ user.college_email|default:"Not provided" }}</p>
-                    </div>
-                    
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted small">Phone Number</label>
-                        <p class="mb-0">{{ user.phone_number|default:"Not provided" }}</p>
-                    </div>
-                    
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted small">Year of Study</label>
-                        <p class="mb-0">{{ user.get_year_of_study_display|default:"Not provided" }}</p>
-                    </div>
-                    
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted small">Branch</label>
-                        <p class="mb-0">{{ user.branch|default:"Not provided" }}</p>
-                    </div>
-                    
-                    <div class="col-12 mb-3">
-                        <label class="form-label text-muted small">Bio</label>
-                        <p class="mb-0">{{ user.bio|default:"No bio provided"|linebreaks }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Academic & Professional Links -->
-        <div class="card mt-3">
-            <div class="card-header">
-                <h5><i class="fas fa-link me-2"></i>Professional Links</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted small">GitHub Profile</label>
-                        {% if user.github_profile %}
-                            <p class="mb-0">
-                                <a href="{{ user.github_profile }}" target="_blank" class="text-decoration-none">
-                                    <i class="fab fa-github me-1"></i>{{ user.github_profile }}
-                                </a>
-                            </p>
-                        {% else %}
-                            <p class="mb-0 text-muted">Not provided</p>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted small">LinkedIn Profile</label>
-                        {% if user.linkedin_profile %}
-                            <p class="mb-0">
-                                <a href="{{ user.linkedin_profile }}" target="_blank" class="text-decoration-none">
-                                    <i class="fab fa-linkedin me-1"></i>{{ user.linkedin_profile }}
-                                </a>
-                            </p>
-                        {% else %}
-                            <p class="mb-0 text-muted">Not provided</p>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Account Information -->
-        <div class="card mt-3">
-            <div class="card-header">
-                <h5><i class="fas fa-cog me-2"></i>Account Information</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted small">Member Since</label>
-                        <p class="mb-0">{{ user.created_at|date:"F d, Y" }}</p>
-                    </div>
-                    
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted small">Last Updated</label>
-                        <p class="mb-0">{{ user.updated_at|date:"F d, Y" }}</p>
-                    </div>
-                    
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted small">Account Status</label>
-                        <p class="mb-0">
-                            {% if user.is_active %}
-                                <span class="badge bg-success">Active</span>
-                            {% else %}
-                                <span class="badge bg-danger">Inactive</span>
-                            {% endif %}
-                        </p>
-                    </div>
-                    
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted small">Email Verified</label>
-                        <p class="mb-0">
-                            {% if user.college_email %}
-                                <span class="badge bg-success">
-                                    <i class="fas fa-check me-1"></i>Verified
-                                </span>
-                            {% else %}
-                                <span class="badge bg-warning">
-                                    <i class="fas fa-exclamation-triangle me-1"></i>Pending
-                                </span>
-                            {% endif %}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    if (!title || !domain) {
+        alert('Please fill in required fields');
+        return;
+    }
+    
+    const newProject = {
+        id: Date.now(),
+        title,
+        description: description || 'No description provided.',
+        domain,
+        technologies,
+        status,
+        icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+    };
+    
+    projects.push(newProject);
+    renderProjects();
+    updateProjectsCount();
+    hideModal();
+}
 
-<!-- Quick Actions -->
-<div class="row mt-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h5><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3 mb-2">
-                        <a href="{% url 'profile_setup' %}" class="btn btn-outline-primary w-100">
-                            <i class="fas fa-edit me-1"></i>Edit Profile
-                        </a>
+function deleteProject(id) {
+    if (confirm('Are you sure you want to delete this project?')) {
+        projects = projects.filter(p => p.id !== id);
+        renderProjects();
+        updateProjectsCount();
+    }
+}
+
+function renderProjects() {
+    projectsGrid.innerHTML = projects.map(project => {
+        const domainColor = domainColors[project.domain] || domainColors['Web Development'];
+        const statusColor = statusColors[project.status] || 'bg-gray-100 text-gray-800';
+        
+        return `
+            <div class="project-card bg-white shadow rounded-lg overflow-hidden">
+                <div class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 ${domainColor.bg} rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 ${domainColor.text}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${project.icon}"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-medium text-gray-900">${project.title}</h3>
+                                <p class="text-sm text-gray-500">${project.domain}</p>
+                            </div>
+                        </div>
+                        <button onclick="deleteProject(${project.id})" class="text-gray-400 hover:text-red-600 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </button>
                     </div>
-                    
-                    <div class="col-md-3 mb-2">
-                        <a href="{% url 'dashboard' %}" class="btn btn-outline-success w-100">
-                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
-                        </a>
+                    <p class="mt-3 text-sm text-gray-600">${project.description}</p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        ${project.technologies.map((tech, index) => 
+                            `<span class="px-2.5 py-0.5 rounded-full text-xs font-medium ${techColors[index % techColors.length]}">${tech}</span>`
+                        ).join('')}
                     </div>
-                    
-                    <div class="col-md-3 mb-2">
-                        <a href="{% url 'create_goal' %}" class="btn btn-outline-info w-100">
-                            <i class="fas fa-bullseye me-1"></i>Create Goal
-                        </a>
-                    </div>
-                    
-                    <div class="col-md-3 mb-2">
-                        <a href="{% url 'logout' %}" class="btn btn-outline-danger w-100">
-                            <i class="fas fa-sign-out-alt me-1"></i>Logout
-                        </a>
+                    <div class="mt-4 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs text-gray-500">Status:</span>
+                            <span class="px-2 py-1 rounded-full text-xs font-medium ${statusColor}">${project.status}</span>
+                        </div>
+                        <a href="#" class="text-indigo-600 hover:text-indigo-500 text-sm font-medium">View Details</a>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
+        `;
+    }).join('');
+}
 
+function updateProjectsCount() {
+    projectsCount.textContent = projects.length;
+}
+
+// Close modal on outside click
+modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        hideModal();
+    }
+});
+
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+const activityChartElem = document.getElementById('activityChart');
+        if (activityChartElem && window.Chart) {
+            const ctx = activityChartElem.getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Hours',
+                        data: [3, 5, 2, 6, 4, 7, 3],
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        borderColor: 'rgba(79, 70, 229, 1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 8,
+                            ticks: {
+                                stepSize: 2
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+    </script>
 {% endblock %}

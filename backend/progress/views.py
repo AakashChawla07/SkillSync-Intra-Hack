@@ -7,6 +7,7 @@ from .models import Goal, GoalTask, WeeklyProgressReport
 from domains.models import TechDomain, UserDomain
 
 # Create your views here.
+
 @login_required
 def progress_dashboard(request):
     goals = Goal.objects.filter(user=request.user).select_related('domain').order_by('-created_at')

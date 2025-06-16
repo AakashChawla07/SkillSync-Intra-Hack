@@ -16,7 +16,8 @@ def domain_list(request):
     
     return render(request, 'domains/domain_list.html', {
         'domains': domains,
-        'user_domains': user_domains
+        'user_domains': user_domains,
+        'user':request.user,
     })
 
 @login_required
